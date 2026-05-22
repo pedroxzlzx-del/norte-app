@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NORTE — Entrar</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --ac:#1D6FA4;--ac2:#155480;--ac3:rgba(29,111,164,0.1);
+  --bg:#080C10;--s1:#0D1218;--s2:#121920;
+  --bd:#1E2A36;--bd2:#243040;
+  --tx:#ECF0F4;--mt:#556070;--mt2:#7A8FA0;
+  --green:#2ECC71;--red:#E74C3C;
+  --display:'Bebas Neue',sans-serif;--mono:'JetBrains Mono',monospace;--body:'Inter',sans-serif;
+}
+body{background:var(--bg);color:var(--tx);font-family:var(--body);min-height:100vh;display:flex;}
+.auth-wrap{display:grid;grid-template-columns:1fr 1fr;min-height:100vh;width:100%;}
+.auth-left{background:var(--s1);border-right:1px solid var(--bd);padding:48px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;}
+.left-noise{position:absolute;inset:0;opacity:0.03;background-image:repeating-linear-gradient(0deg,var(--tx) 0,var(--tx) 1px,transparent 1px,transparent 60px),repeating-linear-gradient(90deg,var(--tx) 0,var(--tx) 1px,transparent 1px,transparent 60px);}
+.left-glow{position:absolute;bottom:-80px;left:-80px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(29,111,164,0.12) 0%,transparent 70%);}
+.logo{font-family:var(--display);font-size:28px;letter-spacing:5px;position:relative;text-decoration:none;color:var(--tx);}
+.logo span{color:var(--ac);}
+.logo sub{font-family:var(--mono);font-size:9px;color:var(--mt);letter-spacing:2px;vertical-align:middle;margin-left:4px;}
+.left-main{position:relative;}
+.left-tag{font-family:var(--mono);font-size:10px;color:var(--ac);letter-spacing:3px;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.left-tag::before{content:'';width:16px;height:1px;background:var(--ac);}
+.left-title{font-family:var(--display);font-size:clamp(42px,4vw,68px);line-height:0.9;letter-spacing:1px;margin-bottom:20px;}
+.left-title span{color:var(--ac);display:block;}
+.left-sub{font-size:13px;line-height:1.75;color:var(--mt2);font-weight:300;max-width:300px;}
+.left-pills{display:flex;flex-direction:column;gap:10px;position:relative;}
+.pill{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--s2);border:1px solid var(--bd);}
+.pill-dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;}
+.pill-text{font-family:var(--mono);font-size:10px;color:var(--mt2);letter-spacing:0.5px;}
+.auth-right{background:var(--bg);padding:48px 44px;display:flex;flex-direction:column;justify-content:center;}
+.form-tabs{display:flex;margin-bottom:36px;border-bottom:1px solid var(--bd);}
+.ftab{flex:1;padding:12px;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-align:center;cursor:pointer;color:var(--mt);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.2s;}
+.ftab.active{color:var(--ac);border-bottom-color:var(--ac);}
+.form-panel{display:none;}
+.form-panel.active{display:block;}
+.form-title{font-family:var(--display);font-size:32px;letter-spacing:1px;margin-bottom:4px;}
+.form-sub{font-size:12px;color:var(--mt);font-family:var(--mono);margin-bottom:28px;}
+.field{margin-bottom:16px;}
+.field-label{font-family:var(--mono);font-size:9px;color:var(--mt);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;display:block;}
+.field-input{width:100%;background:var(--s1);border:1px solid var(--bd);color:var(--tx);padding:12px 14px;font-family:var(--body);font-size:13px;outline:none;transition:border-color 0.2s;}
+.field-input:focus{border-color:var(--ac);}
+.field-input::placeholder{color:var(--mt);}
+.field-input.error{border-color:var(--red);}
+.field-error{font-family:var(--mono);font-size:9px;color:var(--red);margin-top:4px;display:none;}
+.field-error.show{display:block;}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.btn-submit{width:100%;padding:14px;background:var(--ac);color:#fff;border:none;font-family:var(--mono);font-size:12px;letter-spacing:2px;cursor:pointer;transition:all 0.2s;margin-top:8px;}
+.btn-submit:hover{background:var(--ac2);}
+.btn-submit:disabled{opacity:0.6;cursor:not-allowed;}
+.divider{display:flex;align-items:center;gap:12px;margin:20px 0;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--bd);}
+.divider span{font-family:var(--mono);font-size:9px;color:var(--mt);letter-spacing:1px;}
+.btn-google{width:100%;padding:12px;background:transparent;color:var(--mt2);border:1px solid var(--bd);font-family:var(--mono);font-size:11px;letter-spacing:1px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-google:hover{border-color:var(--bd2);color:var(--tx);}
+.terms{font-size:11px;color:var(--mt);line-height:1.5;margin-top:16px;text-align:center;}
+.terms a{color:var(--ac);text-decoration:none;cursor:pointer;}
+.spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;margin-right:8px;vertical-align:middle;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.success-screen{display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px;min-height:400px;}
+.success-screen.show{display:flex;}
+.success-icon{width:60px;height:60px;border-radius:50%;background:rgba(46,204,113,0.1);border:1px solid rgba(46,204,113,0.3);display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:20px;}
+.success-title{font-family:var(--display);font-size:36px;letter-spacing:1px;margin-bottom:8px;}
+.success-sub{font-size:13px;color:var(--mt2);line-height:1.7;max-width:280px;margin-bottom:28px;}
+.btn-enter{padding:14px 36px;background:var(--ac);color:#fff;border:none;font-family:var(--mono);font-size:11px;letter-spacing:2px;cursor:pointer;transition:background 0.2s;text-decoration:none;}
+.btn-enter:hover{background:var(--ac2);}
+.field-wrap{position:relative;}
+.eye-btn{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--mt);cursor:pointer;font-size:14px;padding:4px;}
+.strength-wrap{margin-top:6px;}
+.strength-bar{height:3px;background:var(--bd);display:flex;gap:3px;margin-bottom:4px;}
+.strength-seg{flex:1;background:var(--bd);transition:background 0.3s;}
+.strength-label{font-family:var(--mono);font-size:9px;color:var(--mt);}
+.check-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:16px;}
+.custom-check{width:16px;height:16px;border:1.5px solid var(--bd2);flex-shrink:0;margin-top:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.custom-check.checked{background:var(--ac);border-color:var(--ac);}
+.custom-check.checked::after{content:'✓';font-size:9px;color:#fff;font-weight:700;}
+.check-label{font-size:11px;color:var(--mt);line-height:1.5;cursor:pointer;}
+.check-label a{color:var(--ac);text-decoration:none;}
+.forgot{text-align:right;margin-bottom:20px;}
+.forgot a{font-family:var(--mono);font-size:10px;color:var(--ac);text-decoration:none;letter-spacing:1px;}
+@media(max-width:768px){
+  .auth-wrap{grid-template-columns:1fr;}
+  .auth-left{display:none;}
+  .auth-right{padding:32px 24px;}
+}
+</style>
+</head>
+<body>
+<div class="auth-wrap">
+  <div class="auth-left">
+    <div class="left-noise"></div>
+    <div class="left-glow"></div>
+    <a class="logo" href="index.html">NORT<span>E</span><sub>app</sub></a>
+    <div class="left-main">
+      <div class="left-tag">Plataforma de performance</div>
+      <div class="left-title">ENCONTRE<span>SEU NORTE.</span></div>
+      <p class="left-sub">Controle sua grana, construa disciplina e tome decisões com clareza — tudo em um lugar.</p>
+    </div>
+    <div class="left-pills">
+      <div class="pill"><div class="pill-dot"></div><span class="pill-text">Controle financeiro completo</span></div>
+      <div class="pill"><div class="pill-dot"></div><span class="pill-text">Hábitos e disciplina com streak</span></div>
+      <div class="pill"><div class="pill-dot"></div><span class="pill-text">NORTE IA — consultor pessoal</span></div>
+      <div class="pill"><div class="pill-dot"></div><span class="pill-text">Cursos inclusos na assinatura</span></div>
+    </div>
+  </div>
+  <div class="auth-right">
+    <div class="form-tabs">
+      <div class="ftab active" id="tab-login" onclick="switchTab('login')">ENTRAR</div>
+      <div class="ftab" id="tab-cadastro" onclick="switchTab('cadastro')">CRIAR CONTA</div>
+    </div>
+    <!-- LOGIN -->
+    <div class="form-panel active" id="form-login">
+      <div class="form-title">BEM-VINDO</div>
+      <div class="form-sub">// ACESSE SUA CONTA NORTE</div>
+      <div class="field">
+        <label class="field-label">E-mail</label>
+        <input class="field-input" id="l-email" type="email" placeholder="seu@email.com">
+        <div class="field-error" id="l-email-err">E-mail inválido</div>
+      </div>
+      <div class="field">
+        <label class="field-label">Senha</label>
+        <div class="field-wrap">
+          <input class="field-input" id="l-senha" type="password" placeholder="••••••••">
+          <button class="eye-btn" onclick="togglePass('l-senha',this)">👁</button>
+        </div>
+        <div class="field-error" id="l-senha-err">Senha obrigatória</div>
+      </div>
+      <div class="forgot"><a href="#">ESQUECI A SENHA</a></div>
+      <button class="btn-submit" id="btn-login" onclick="doLogin()">ENTRAR NA CONTA</button>
+      <div class="divider"><span>OU</span></div>
+      <button class="btn-google">G &nbsp; CONTINUAR COM GOOGLE</button>
+      <p class="terms">Não tem conta? <a onclick="switchTab('cadastro')">Criar agora — é grátis</a></p>
+    </div>
+    <!-- CADASTRO -->
+    <div class="form-panel" id="form-cadastro">
+      <div class="form-title">CRIAR CONTA</div>
+      <div class="form-sub">// COMECE DE GRAÇA, ASSINE QUANDO QUISER</div>
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label">Nome</label>
+          <input class="field-input" id="c-nome" type="text" placeholder="Seu nome">
+          <div class="field-error" id="c-nome-err">Nome obrigatório</div>
+        </div>
+        <div class="field">
+          <label class="field-label">Sobrenome</label>
+          <input class="field-input" id="c-sob" type="text" placeholder="Sobrenome">
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">E-mail</label>
+        <input class="field-input" id="c-email" type="email" placeholder="seu@email.com">
+        <div class="field-error" id="c-email-err">E-mail inválido</div>
+      </div>
+      <div class="field">
+        <label class="field-label">Senha</label>
+        <div class="field-wrap">
+          <input class="field-input" id="c-senha" type="password" placeholder="Min. 8 caracteres" oninput="checkStrength(this.value)">
+          <button class="eye-btn" onclick="togglePass('c-senha',this)">👁</button>
+        </div>
+        <div class="strength-wrap">
+          <div class="strength-bar">
+            <div class="strength-seg" id="s1"></div><div class="strength-seg" id="s2"></div>
+            <div class="strength-seg" id="s3"></div><div class="strength-seg" id="s4"></div>
+          </div>
+          <div class="strength-label" id="s-label">Digite uma senha</div>
+        </div>
+        <div class="field-error" id="c-senha-err">Mínimo 8 caracteres</div>
+      </div>
+      <div class="check-row">
+        <div class="custom-check" id="terms-check" onclick="toggleCheck(this)"></div>
+        <div class="check-label" onclick="toggleCheck(document.getElementById('terms-check'))">
+          Concordo com os <a href="#">Termos de Uso</a> e <a href="#">Política de Privacidade</a>
+        </div>
+      </div>
+      <button class="btn-submit" id="btn-cadastro" onclick="doCadastro()">CRIAR MINHA CONTA</button>
+      <div class="divider"><span>OU</span></div>
+      <button class="btn-google">G &nbsp; CONTINUAR COM GOOGLE</button>
+      <p class="terms">Já tem conta? <a onclick="switchTab('login')">Entrar agora</a></p>
+    </div>
+    <!-- SUCESSO -->
+    <div class="success-screen" id="success-screen">
+      <div class="success-icon">✦</div>
+      <div class="success-title">CONTA CRIADA</div>
+      <p class="success-sub">Bem-vindo ao NORTE. Seu painel está pronto. Hora de encontrar sua direção.</p>
+      <a class="btn-enter" href="app.html">ACESSAR MEU PAINEL →</a>
+    </div>
+  </div>
+</div>
+<script>
+function switchTab(t){
+  document.querySelectorAll('.ftab').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.form-panel').forEach(x=>x.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  document.getElementById('form-'+t).classList.add('active');
+  document.getElementById('success-screen').classList.remove('show');
+}
+function togglePass(id,btn){
+  const inp=document.getElementById(id);
+  inp.type=inp.type==='password'?'text':'password';
+  btn.textContent=inp.type==='password'?'👁':'🙈';
+}
+function toggleCheck(el){el.classList.toggle('checked');}
+function checkStrength(v){
+  const segs=[document.getElementById('s1'),document.getElementById('s2'),document.getElementById('s3'),document.getElementById('s4')];
+  const lbl=document.getElementById('s-label');
+  segs.forEach(s=>s.style.background='var(--bd)');
+  if(!v){lbl.textContent='Digite uma senha';lbl.style.color='var(--mt)';return;}
+  let score=0;
+  if(v.length>=8)score++;if(/[A-Z]/.test(v))score++;if(/[0-9]/.test(v))score++;if(/[^A-Za-z0-9]/.test(v))score++;
+  const colors=['#E74C3C','#E74C3C','#F0A500','#2ECC71'];
+  const labels=['Muito fraca','Fraca','Média','Forte'];
+  for(let i=0;i<score;i++)segs[i].style.background=colors[score-1];
+  lbl.textContent=score>0?labels[score-1]:'';lbl.style.color=colors[score-1]||'var(--mt)';
+}
+function setLoading(btnId,loading,txt){
+  const b=document.getElementById(btnId);b.disabled=loading;
+  b.innerHTML=loading?`<span class="spinner"></span>${txt}`:txt;
+}
+function showErr(id,show){const e=document.getElementById(id);if(e)e.classList.toggle('show',show);}
+function validateEmail(e){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);}
+async function doLogin(){
+  const email=document.getElementById('l-email').value.trim();
+  const senha=document.getElementById('l-senha').value;
+  let ok=true;
+  if(!validateEmail(email)){document.getElementById('l-email').classList.add('error');showErr('l-email-err',true);ok=false;}
+  else{document.getElementById('l-email').classList.remove('error');showErr('l-email-err',false);}
+  if(!senha){document.getElementById('l-senha').classList.add('error');showErr('l-senha-err',true);ok=false;}
+  else{document.getElementById('l-senha').classList.remove('error');showErr('l-senha-err',false);}
+  if(!ok)return;
+  setLoading('btn-login',true,'ENTRANDO...');
+  await new Promise(r=>setTimeout(r,1400));
+  window.location.href='app.html';
+}
+async function doCadastro(){
+  const nome=document.getElementById('c-nome').value.trim();
+  const email=document.getElementById('c-email').value.trim();
+  const senha=document.getElementById('c-senha').value;
+  let ok=true;
+  if(!nome){document.getElementById('c-nome').classList.add('error');showErr('c-nome-err',true);ok=false;}
+  else{document.getElementById('c-nome').classList.remove('error');showErr('c-nome-err',false);}
+  if(!validateEmail(email)){document.getElementById('c-email').classList.add('error');showErr('c-email-err',true);ok=false;}
+  else{document.getElementById('c-email').classList.remove('error');showErr('c-email-err',false);}
+  if(senha.length<8){document.getElementById('c-senha').classList.add('error');showErr('c-senha-err',true);ok=false;}
+  else{document.getElementById('c-senha').classList.remove('error');showErr('c-senha-err',false);}
+  if(!ok)return;
+  setLoading('btn-cadastro',true,'CRIANDO SUA CONTA...');
+  await new Promise(r=>setTimeout(r,1600));
+  setLoading('btn-cadastro',false,'CRIAR MINHA CONTA');
+  document.getElementById('form-cadastro').classList.remove('active');
+  document.getElementById('success-screen').classList.add('show');
+}
+</script>
+</body>
+</html>

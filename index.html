@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NORTE — Encontre seu norte. Construa sua vida.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --ac:#1D6FA4;--ac2:#155480;--ac3:rgba(29,111,164,0.12);
+  --bg:#080C10;--s1:#0D1218;--s2:#121920;
+  --bd:#1E2A36;--bd2:#243040;--tx:#ECF0F4;--mt:#556070;--mt2:#7A8FA0;
+  --green:#2ECC71;--red:#E74C3C;
+  --display:'Bebas Neue',sans-serif;--mono:'JetBrains Mono',monospace;--body:'Inter',sans-serif;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--tx);font-family:var(--body);overflow-x:hidden;}
+nav{position:sticky;top:0;z-index:100;padding:18px 40px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bd);background:rgba(8,12,16,0.96);backdrop-filter:blur(12px);}
+.logo{font-family:var(--display);font-size:26px;letter-spacing:4px;color:var(--tx);text-decoration:none;}
+.logo span{color:var(--ac);}
+.logo sub{font-family:var(--mono);font-size:9px;color:var(--mt);letter-spacing:2px;vertical-align:middle;margin-left:4px;}
+.nav-cta{background:var(--ac);color:#fff;border:none;padding:10px 26px;font-family:var(--mono);font-size:11px;cursor:pointer;letter-spacing:2px;text-transform:uppercase;transition:background 0.2s;text-decoration:none;}
+.nav-cta:hover{background:var(--ac2);}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:120px 40px 80px;position:relative;overflow:hidden;}
+.hero-tag{font-family:var(--mono);font-size:11px;color:var(--ac);letter-spacing:3px;text-transform:uppercase;margin-bottom:24px;display:flex;align-items:center;gap:10px;}
+.hero-tag::before{content:'';width:20px;height:1px;background:var(--ac);}
+.hero-title{font-family:var(--display);font-size:clamp(70px,11vw,148px);line-height:0.88;letter-spacing:2px;margin-bottom:36px;}
+.hero-title .l2{color:var(--ac);display:block;}
+.hero-title .l3{color:var(--mt);display:block;font-size:clamp(44px,7vw,100px);}
+.hero-sub{font-size:16px;line-height:1.75;color:var(--mt2);max-width:460px;margin-bottom:48px;font-weight:300;}
+.hero-sub strong{color:var(--tx);font-weight:500;}
+.hero-actions{display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+.btn-p{background:var(--ac);color:#fff;border:none;padding:18px 40px;font-family:var(--mono);font-size:12px;cursor:pointer;letter-spacing:2px;text-transform:uppercase;transition:all 0.2s;text-decoration:none;display:inline-block;}
+.btn-p:hover{background:var(--ac2);}
+.btn-g{background:transparent;color:var(--tx);border:1px solid var(--bd2);padding:18px 36px;font-family:var(--mono);font-size:12px;cursor:pointer;letter-spacing:2px;transition:all 0.2s;text-decoration:none;display:inline-block;}
+.btn-g:hover{border-color:var(--ac);color:var(--ac);}
+.price-note{font-family:var(--mono);font-size:12px;color:var(--mt);}
+.price-note strong{color:var(--tx);font-size:20px;}
+.stats{padding:0 40px;border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);display:grid;grid-template-columns:repeat(4,1fr);}
+.stat{padding:32px 20px;text-align:center;border-right:1px solid var(--bd);}
+.stat:last-child{border-right:none;}
+.stat-n{font-family:var(--display);font-size:48px;color:var(--ac);display:block;line-height:1;}
+.stat-l{font-family:var(--mono);font-size:10px;color:var(--mt);text-transform:uppercase;letter-spacing:2px;margin-top:2px;}
+.section{padding:100px 40px;}
+.sec-tag{font-family:var(--mono);font-size:10px;color:var(--ac);letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;}
+.sec-title{font-family:var(--display);font-size:clamp(40px,6vw,88px);line-height:0.92;margin-bottom:60px;}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--bd);}
+.feat{background:var(--bg);padding:44px 36px;transition:background 0.2s;}
+.feat:hover{background:var(--s1);}
+.feat-n{font-family:var(--mono);font-size:10px;color:var(--ac);letter-spacing:2px;margin-bottom:14px;display:block;}
+.feat-name{font-family:var(--display);font-size:28px;margin-bottom:10px;letter-spacing:1px;}
+.feat-desc{font-size:13px;line-height:1.75;color:var(--mt2);font-weight:300;}
+.ai-sec{padding:100px 40px;background:var(--s1);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);}
+.ai-in{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1100px;margin:0 auto;}
+.chat-box{background:var(--bg);border:1px solid var(--bd);}
+.chat-hdr{padding:14px 18px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:8px;}
+.cdot{width:7px;height:7px;border-radius:50%;background:var(--green);}
+.ctitle{font-family:var(--mono);font-size:11px;color:var(--mt);letter-spacing:1px;}
+.chat-body{padding:20px;display:flex;flex-direction:column;gap:14px;}
+.bubble{padding:11px 15px;font-size:13px;line-height:1.65;}
+.bbot{background:var(--s2);color:#b0c0d0;border-left:2px solid var(--ac);}
+.buser{background:var(--ac);color:#fff;align-self:flex-end;max-width:80%;}
+.bname{font-family:var(--mono);font-size:9px;color:var(--mt);letter-spacing:1px;margin-bottom:4px;}
+.price-sec{padding:100px 40px;text-align:center;}
+.price-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--bd);max-width:720px;margin:56px auto 0;}
+.pc{background:var(--bg);padding:52px 36px;text-align:left;}
+.pc.feat-pc{background:var(--s1);}
+.pl-badge{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--ac);margin-bottom:18px;display:block;}
+.pl-name{font-family:var(--display);font-size:34px;margin-bottom:6px;}
+.pl-price{font-size:46px;font-weight:700;margin:18px 0 6px;line-height:1;}
+.pl-price span{font-size:16px;font-weight:400;color:var(--mt);}
+.pl-desc{font-size:12px;color:var(--mt);margin-bottom:28px;line-height:1.6;font-family:var(--mono);}
+.pl-list{list-style:none;margin-bottom:36px;}
+.pl-list li{font-size:13px;color:var(--mt2);padding:7px 0;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:8px;}
+.pl-list li::before{content:'—';color:var(--ac);}
+.pl-cta{width:100%;padding:15px;font-family:var(--mono);font-size:11px;letter-spacing:2px;cursor:pointer;transition:all 0.2s;border:1px solid var(--ac);color:var(--ac);background:transparent;}
+.pc.feat-pc .pl-cta,.pl-cta:hover{background:var(--ac);color:#fff;}
+.course-sec{padding:0 40px 100px;display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;max-width:1100px;margin:0 auto;}
+.mod-list{display:flex;flex-direction:column;gap:1px;background:var(--bd);}
+.mod{background:var(--bg);padding:18px 22px;display:flex;align-items:center;gap:14px;transition:background 0.2s;}
+.mod:hover{background:var(--s1);}
+.mod-n{font-family:var(--mono);font-size:10px;color:var(--ac);min-width:28px;}
+.mod-name{font-size:13px;font-weight:500;flex:1;}
+.mod-ok{font-size:11px;color:var(--green);}
+.final{padding:120px 40px;text-align:center;position:relative;overflow:hidden;}
+.final-bg{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(29,111,164,0.06) 0%,transparent 70%);}
+.final-title{font-family:var(--display);font-size:clamp(56px,9vw,130px);line-height:0.88;margin-bottom:28px;position:relative;}
+.final-title span{color:var(--ac);}
+.final-sub{font-size:15px;color:var(--mt);margin-bottom:44px;font-weight:300;position:relative;}
+footer{padding:32px 40px;border-top:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;}
+.fc{font-family:var(--mono);font-size:10px;color:var(--mt);letter-spacing:1px;}
+@media(max-width:768px){
+  nav{padding:16px 20px;}
+  .hero{padding:100px 20px 60px;}
+  .stats{grid-template-columns:1fr 1fr;}
+  .stat{border-right:none;border-bottom:1px solid var(--bd);}
+  .section{padding:60px 20px;}
+  .feat-grid{grid-template-columns:1fr;}
+  .ai-in,.course-sec{grid-template-columns:1fr;gap:40px;}
+  .price-cards{grid-template-columns:1fr;}
+  .final{padding:80px 20px;}
+  footer{flex-direction:column;gap:16px;text-align:center;}
+}
+</style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="index.html">NORT<span>E</span><sub>app</sub></a>
+  <a class="nav-cta" href="login.html">Começar agora</a>
+</nav>
+<section class="hero">
+  <div class="hero-tag">Plataforma de performance masculina</div>
+  <h1 class="hero-title">
+    ENCONTRE
+    <span class="l2">SEU NORTE.</span>
+    <span class="l3">CONSTRUA SUA VIDA.</span>
+  </h1>
+  <p class="hero-sub">Quem não tem <strong>norte</strong> anda em círculo. Controle sua <strong>grana</strong>, construa sua <strong>disciplina</strong> e tome decisões com clareza — tudo em um lugar.</p>
+  <div class="hero-actions">
+    <a class="btn-p" href="login.html">Quero meu norte →</a>
+    <a class="btn-g" href="#funciona">Como funciona</a>
+    <div class="price-note">A partir de <strong>R$27</strong>/mês</div>
+  </div>
+</section>
+<div class="stats">
+  <div class="stat"><span class="stat-n">3</span><span class="stat-l">Módulos integrados</span></div>
+  <div class="stat"><span class="stat-n">IA</span><span class="stat-l">Consultor pessoal</span></div>
+  <div class="stat"><span class="stat-n">PWA</span><span class="stat-l">Funciona no celular</span></div>
+  <div class="stat"><span class="stat-n">24h</span><span class="stat-l">Acesso total</span></div>
+</div>
+<section class="section" id="funciona">
+  <div class="sec-tag">// o sistema</div>
+  <h2 class="sec-title">TUDO QUE<br>VOCÊ PRECISA</h2>
+  <div class="feat-grid">
+    <div class="feat"><span class="feat-n">01</span><div class="feat-name">GRANA</div><p class="feat-desc">Controle de entradas e saídas, metas de renda, saldo em tempo real. Simples, direto, sem enrolação.</p></div>
+    <div class="feat"><span class="feat-n">02</span><div class="feat-name">DISCIPLINA</div><p class="feat-desc">Hábitos diários com streak, histórico de consistência e score de performance. Você vê sua evolução.</p></div>
+    <div class="feat"><span class="feat-n">03</span><div class="feat-name">MISSÕES</div><p class="feat-desc">Gestão de tarefas com prioridade real. Foco no que move o ponteiro hoje, amanhã e essa semana.</p></div>
+    <div class="feat"><span class="feat-n">04</span><div class="feat-name">NORTE IA</div><p class="feat-desc">Consultor que fala sua língua. Sem papo de coach, sem frase motivacional. Resposta direta pra sua situação.</p></div>
+    <div class="feat"><span class="feat-n">05</span><div class="feat-name">CURSOS</div><p class="feat-desc">Saúde mental, finanças pessoais, foco e produtividade. Conteúdo denso, feito pra homem ocupado.</p></div>
+    <div class="feat"><span class="feat-n">06</span><div class="feat-name">MOBILE</div><p class="feat-desc">Instala no celular como app nativo. Sem loja de aplicativos, sem burocracia. Abre e usa.</p></div>
+  </div>
+</section>
+<section class="ai-sec">
+  <div class="ai-in">
+    <div>
+      <div class="sec-tag">// norte ia</div>
+      <h2 class="sec-title" style="font-size:clamp(34px,5vw,68px);margin-bottom:20px;">SEU CONSULTOR<br>PESSOAL</h2>
+      <p style="color:var(--mt2);font-size:15px;line-height:1.8;font-weight:300;margin-bottom:20px;">Não é um chatbot genérico. É um assistente treinado pra entender sua situação financeira, seus hábitos e seus objetivos — e te dar uma resposta real, sem rodeio.</p>
+      <p style="color:var(--mt);font-size:12px;font-family:var(--mono);">// Disponível 24h dentro do app</p>
+    </div>
+    <div class="chat-box">
+      <div class="chat-hdr"><div class="cdot"></div><span class="ctitle">NORTE IA — online agora</span></div>
+      <div class="chat-body">
+        <div><div class="bname">VOCÊ</div><div class="bubble buser">Tô gastando mais do que ganho. Como paro isso?</div></div>
+        <div><div class="bname">NORTE IA</div><div class="bubble bbot">Não é falta de dinheiro, é falta de controle. Abre o módulo Grana e lança os últimos 7 dias — o problema vai aparecer na cara dura. Me fala os números e a gente resolve.</div></div>
+        <div><div class="bname">VOCÊ</div><div class="bubble buser">Quero acordar cedo mas não consigo</div></div>
+        <div><div class="bname">NORTE IA</div><div class="bubble bbot">Esquece o despertador por um segundo. Que horas você vai dormir? O problema 99% das vezes é a noite, não a manhã.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="price-sec" id="precos">
+  <div class="sec-tag" style="display:inline-block;">// investimento</div>
+  <h2 class="sec-title">SIMPLES.<br>SEM PEGADINHA.</h2>
+  <div class="price-cards">
+    <div class="pc">
+      <span class="pl-badge">Mensal</span>
+      <div class="pl-name">NORTE</div>
+      <div class="pl-price">R$27<span>/mês</span></div>
+      <p class="pl-desc">Acesso completo. Cancela quando quiser.</p>
+      <ul class="pl-list">
+        <li>Controle financeiro completo</li>
+        <li>Hábitos e disciplina</li>
+        <li>Gestão de tarefas</li>
+        <li>NORTE IA ilimitada</li>
+        <li>Todos os cursos inclusos</li>
+      </ul>
+      <button class="pl-cta" onclick="window.location.href='login.html'">Começar agora</button>
+    </div>
+    <div class="pc feat-pc">
+      <span class="pl-badge">⭐ Mais escolhido — Anual</span>
+      <div class="pl-name">NORTE+</div>
+      <div class="pl-price">R$197<span>/ano</span></div>
+      <p class="pl-desc">Equivale a R$16/mês. Você economiza R$127.</p>
+      <ul class="pl-list">
+        <li>Tudo do plano mensal</li>
+        <li>Prioridade no suporte</li>
+        <li>Novos cursos em primeira mão</li>
+        <li>Relatórios mensais avançados</li>
+        <li>Badge de membro fundador</li>
+      </ul>
+      <button class="pl-cta" onclick="window.location.href='login.html'">Garantir meu acesso</button>
+    </div>
+  </div>
+</section>
+<div class="course-sec">
+  <div>
+    <div class="sec-tag">// conteúdo incluso</div>
+    <h2 class="sec-title" style="font-size:clamp(34px,5vw,72px);">CURSOS QUE<br>SERVEM PRA<br>VIDA REAL</h2>
+    <p style="color:var(--mt2);font-size:14px;line-height:1.8;font-weight:300;">Sem enrolação de infoprodutor. Cada módulo é uma aula que você aplica no mesmo dia.</p>
+  </div>
+  <div class="mod-list">
+    <div class="mod"><span class="mod-n">01</span><span class="mod-name">Controle financeiro na prática</span><span class="mod-ok">✓</span></div>
+    <div class="mod"><span class="mod-n">02</span><span class="mod-name">Saúde mental masculina</span><span class="mod-ok">✓</span></div>
+    <div class="mod"><span class="mod-n">03</span><span class="mod-name">Foco e produtividade real</span><span class="mod-ok">✓</span></div>
+    <div class="mod"><span class="mod-n">04</span><span class="mod-name">Como construir disciplina</span><span class="mod-ok">✓</span></div>
+    <div class="mod"><span class="mod-n">05</span><span class="mod-name">Relacionamentos e comunicação</span><span class="mod-ok">✓</span></div>
+    <div class="mod"><span class="mod-n">06</span><span class="mod-name">Mentalidade de crescimento</span><span class="mod-ok">✓</span></div>
+  </div>
+</div>
+<section class="final">
+  <div class="final-bg"></div>
+  <h2 class="final-title">PRONTO PRA<br>ACHAR <span>SEU NORTE?</span></h2>
+  <p class="final-sub">Menos círculo. Mais direção. Começa hoje por R$27.</p>
+  <a class="btn-p" href="login.html" style="font-size:13px;padding:20px 52px;">Quero meu norte agora →</a>
+</section>
+<footer>
+  <a class="logo" href="index.html" style="font-size:20px;">NORT<span style="color:var(--ac);">E</span></a>
+  <div class="fc">© 2025 NORTE — Todos os direitos reservados</div>
+</footer>
+</body>
+</html>
