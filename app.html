@@ -243,7 +243,68 @@ body{background:var(--bg);color:var(--tx);font-family:var(--body);display:flex;f
 .cdesc{font-size:11px;color:var(--mt);line-height:1.6;}
 .cmeta{margin-top:10px;font-family:var(--mono);font-size:9px;color:var(--ac);}
 
-/* LOJA */
+/* MODO CRISE */
+.crise-banner{display:flex;align-items:center;gap:14px;padding:14px 18px;background:rgba(231,76,60,0.06);border:1px solid rgba(231,76,60,0.2);margin-top:10px;cursor:pointer;transition:all 0.2s;}
+.crise-banner:hover{background:rgba(231,76,60,0.1);border-color:rgba(231,76,60,0.4);}
+.crise-banner-icon{font-size:24px;flex-shrink:0;}
+.crise-banner-text{flex:1;}
+.crise-banner-titulo{font-size:13px;font-weight:600;color:#E74C3C;margin-bottom:2px;}
+.crise-banner-desc{font-size:11px;color:var(--mt);line-height:1.5;}
+.crise-banner-arrow{font-size:18px;color:rgba(231,76,60,0.5);}
+
+.crise-overlay{display:none;position:fixed;inset:0;background:rgba(4,6,10,0.97);z-index:200;flex-direction:column;align-items:center;justify-content:center;padding:24px;animation:fadeIn 0.4s ease;}
+.crise-overlay.show{display:flex;}
+.crise-wrap{width:100%;max-width:640px;display:flex;flex-direction:column;height:90vh;max-height:700px;}
+.crise-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:16px;}
+.crise-title{font-family:var(--display);font-size:32px;letter-spacing:2px;color:#E74C3C;}
+.crise-sub{font-family:var(--mono);font-size:9px;color:var(--mt);letter-spacing:2px;margin-top:2px;}
+.btn-sair-crise{background:transparent;border:1px solid rgba(231,76,60,0.3);color:rgba(231,76,60,0.6);padding:8px 14px;font-family:var(--mono);font-size:9px;letter-spacing:1px;cursor:pointer;transition:all 0.2s;white-space:nowrap;flex-shrink:0;}
+.btn-sair-crise:hover{border-color:#E74C3C;color:#E74C3C;}
+.crise-msgs{flex:1;overflow-y:auto;background:var(--s1);border:1px solid rgba(231,76,60,0.15);padding:20px;display:flex;flex-direction:column;gap:14px;margin-bottom:0;scrollbar-width:thin;}
+.crise-input-row{display:flex;border:1px solid rgba(231,76,60,0.2);border-top:none;}
+.crise-input-row .cinp{border:none;background:var(--s2);}
+.crise-input-row .csend{background:#E74C3C;}
+.crise-input-row .csend:hover{background:#c0392b;}
+
+/* RELATÓRIO */
+.relatorio-hero{background:var(--s1);border:1px solid var(--bd);padding:24px;display:flex;align-items:center;gap:24px;margin-bottom:16px;flex-wrap:wrap;}
+.rel-info{flex:1;min-width:200px;}
+.rel-periodo{font-family:var(--mono);font-size:10px;color:var(--ac);letter-spacing:2px;margin-bottom:8px;}
+.rel-desc{font-size:13px;color:var(--mt2);line-height:1.7;}
+.btn-gerar-rel{background:var(--ac);color:#fff;border:none;padding:14px 24px;font-family:var(--mono);font-size:10px;letter-spacing:1.5px;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.btn-gerar-rel:hover{background:var(--ac2);transform:translateY(-1px);}
+.btn-gerar-rel:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+
+.rel-stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;}
+.rel-stat{background:var(--s1);border:1px solid var(--bd);padding:14px;text-align:center;}
+.rel-stat-val{font-family:var(--display);font-size:28px;line-height:1;margin-bottom:4px;}
+.rel-stat-label{font-family:var(--mono);font-size:9px;color:var(--mt);letter-spacing:1px;}
+
+.rel-output-wrap{background:var(--s1);border:1px solid var(--bd);overflow:hidden;margin-bottom:16px;}
+.rel-output-header{padding:14px 20px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;background:var(--s2);}
+.rel-output-title{font-family:var(--mono);font-size:9px;color:var(--ac);letter-spacing:2px;}
+.rel-output-date{font-family:var(--mono);font-size:9px;color:var(--mt);}
+.rel-output-body{padding:24px;font-size:13px;line-height:1.9;color:#b0c4d8;white-space:pre-wrap;}
+
+.rel-historico-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--bd);cursor:pointer;transition:all 0.15s;}
+.rel-historico-item:last-child{border-bottom:none;}
+.rel-historico-item:hover{padding-left:4px;}
+.rel-hist-data{font-family:var(--mono);font-size:10px;color:var(--mt);min-width:80px;}
+.rel-hist-preview{font-size:12px;color:var(--mt2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+/* ANÁLISE FINANCEIRA */
+.btn-analise{width:100%;padding:12px;background:transparent;border:1px solid var(--ac);color:var(--ac);font-family:var(--mono);font-size:10px;letter-spacing:1.5px;cursor:pointer;transition:all 0.2s;margin-top:0;}
+.btn-analise:hover{background:var(--ac3);}
+.btn-analise:disabled{opacity:0.5;cursor:not-allowed;}
+.analise-output{background:var(--s2);border:1px solid var(--bd);border-top:2px solid var(--ac);padding:20px;font-size:13px;line-height:1.8;color:#b0c4d8;margin-top:12px;white-space:pre-wrap;}
+
+/* MOBILE AJUSTES */
+@media(max-width:768px){
+  .rel-stats-grid{grid-template-columns:repeat(2,1fr);}
+  .relatorio-hero{flex-direction:column;}
+  .btn-gerar-rel{width:100%;}
+  .crise-wrap{height:95vh;}
+}
 .xp-hero{background:var(--s1);border:1px solid var(--bd);padding:24px;margin-bottom:20px;display:flex;align-items:center;gap:24px;}
 .xp-hero-num{font-family:var(--display);font-size:72px;color:var(--gold);line-height:1;}
 .xp-hero-info{flex:1;}
@@ -374,8 +435,10 @@ body{background:var(--bg);color:var(--tx);font-family:var(--body);display:flex;f
     <div class="nav-item" onclick="nav('ia',this)"><span class="ni">✦</span>NORTE IA</div>
     <div class="nav-section">extras</div>
     <div class="nav-item loja-item" onclick="nav('loja',this)"><span class="ni">🏪</span>Loja</div>
+    <div class="nav-item" onclick="nav('relatorio',this)"><span class="ni">📊</span>Relatório</div>
     <div class="sidebar-bottom">
       <div class="nav-item" onclick="nav('cursos',this)"><span class="ni">▣</span>Cursos</div>
+      <div class="nav-item crise-item" onclick="ativarCrise()" style="color:#E74C3C;border-left-color:transparent;"><span class="ni">🆘</span>Modo Crise</div>
       <a class="logout" href="login.html">← Sair</a>
     </div>
   </div>
@@ -410,6 +473,14 @@ body{background:var(--bg);color:var(--tx);font-family:var(--body);display:flex;f
           </div>
         </div>
       </div>
+      <div class="crise-banner" onclick="ativarCrise()">
+        <div class="crise-banner-icon">🆘</div>
+        <div class="crise-banner-text">
+          <div class="crise-banner-titulo">Tá difícil hoje?</div>
+          <div class="crise-banner-desc">Ative o modo crise — sem pressão, sem missões. A NORTE IA te ajuda a organizar o caos.</div>
+        </div>
+        <div class="crise-banner-arrow">→</div>
+      </div>
     </div>
 
     <!-- GRANA -->
@@ -428,6 +499,10 @@ body{background:var(--bg);color:var(--tx);font-family:var(--body);display:flex;f
       </div>
       <div class="block-title" style="margin-bottom:8px;">LANÇAMENTOS <span id="ecount">0</span></div>
       <div class="elist" id="elist"><div class="empty">Nenhum lançamento ainda</div></div>
+      <div id="analise-wrap" style="display:none;margin-top:12px;">
+        <button class="btn-analise" id="btn-analise" onclick="analisarGrana()">✦ NORTE IA — ANALISAR MINHA GRANA</button>
+        <div class="analise-output" id="analise-output" style="display:none;"></div>
+      </div>
     </div>
 
     <!-- DISCIPLINA -->
@@ -547,6 +622,30 @@ body{background:var(--bg);color:var(--tx);font-family:var(--body);display:flex;f
       </div>
     </div>
 
+    <!-- RELATÓRIO -->
+    <div class="panel" id="panel-relatorio">
+      <div class="sec-h">RELATÓRIO</div><div class="sec-s">// ANÁLISE SEMANAL DA SUA VIDA</div>
+      <div class="relatorio-hero">
+        <div class="rel-info">
+          <div class="rel-periodo" id="rel-periodo"></div>
+          <div class="rel-desc">A NORTE IA analisa seus dados da semana e gera um diagnóstico honesto — onde você foi bem, onde vacilou e o que focar na próxima semana.</div>
+        </div>
+        <button class="btn-gerar-rel" id="btn-gerar-rel" onclick="gerarRelatorio()">GERAR RELATÓRIO DA SEMANA</button>
+      </div>
+      <div class="rel-stats-grid" id="rel-stats"></div>
+      <div class="rel-output-wrap" id="rel-output-wrap" style="display:none;">
+        <div class="rel-output-header">
+          <div class="rel-output-title">// DIAGNÓSTICO SEMANAL — NORTE IA</div>
+          <div class="rel-output-date" id="rel-output-date"></div>
+        </div>
+        <div class="rel-output-body" id="rel-output-body"></div>
+      </div>
+      <div class="rel-historico" id="rel-historico" style="display:none;">
+        <div class="block-title" style="margin-bottom:12px;">RELATÓRIOS ANTERIORES</div>
+        <div id="rel-historico-list"></div>
+      </div>
+    </div>
+
     <!-- CURSOS -->
     <div class="panel" id="panel-cursos">
       <div class="sec-h">CURSOS</div><div class="sec-s">// CONTEÚDO INCLUSO NA ASSINATURA</div>
@@ -558,6 +657,26 @@ body{background:var(--bg);color:var(--tx);font-family:var(--body);display:flex;f
       </div>
     </div>
 
+  </div>
+</div>
+
+<!-- MODO CRISE -->
+<div class="crise-overlay" id="crise-overlay">
+  <div class="crise-wrap">
+    <div class="crise-header">
+      <div>
+        <div class="crise-title">MODO CRISE</div>
+        <div class="crise-sub">// SEM PRESSÃO. SEM MISSÕES. SÓ VOCÊ E A IA.</div>
+      </div>
+      <button class="btn-sair-crise" onclick="desativarCrise()">SAIR DO MODO CRISE ×</button>
+    </div>
+    <div class="crise-msgs" id="crise-msgs">
+      <div class="msg-wrap"><div class="msender">NORTE IA</div><div class="bubble bot">Para. Respira.\n\nEsquece as missões, o XP, os hábitos. Isso tudo pode esperar.\n\nMe fala o que tá acontecendo.</div></div>
+    </div>
+    <div class="crise-input-row">
+      <input class="cinp" id="crise-input" placeholder="Fala o que tá rolando..." onkeydown="if(event.key==='Enter')sendCrise()">
+      <button class="csend" onclick="sendCrise()">ENVIAR</button>
+    </div>
   </div>
 </div>
 
@@ -589,7 +708,8 @@ function nav(p,el){
   el.classList.add('active');
   closeSidebar();
   updateAll();
-  if(p==='loja')renderLoja();
+  if(p==='loja') renderLoja();
+  if(p==='relatorio') initRelatorio();
 }
 
 // ── XP SYSTEM ──
@@ -744,7 +864,155 @@ function confirmarResgate(){
   alert(`✓ Resgate confirmado! Você receberá sua recompensa em ${email} em até 48h úteis.`);
 }
 
-// ── MISSÕES DIÁRIAS ──
+// ── MODO CRISE ──
+function ativarCrise(){
+  document.getElementById('crise-overlay').classList.add('show');
+  document.getElementById('crise-input').focus();
+  closeSidebar();
+}
+function desativarCrise(){
+  document.getElementById('crise-overlay').classList.remove('show');
+  document.getElementById('crise-msgs').innerHTML =
+    '<div class="msg-wrap"><div class="msender">NORTE IA</div><div class="bubble bot">Para. Respira.\n\nEsquece as missões, o XP, os hábitos. Isso tudo pode esperar.\n\nMe fala o que tá acontecendo.</div></div>';
+}
+async function sendCrise(){
+  const inp = document.getElementById('crise-input');
+  const msg = inp.value.trim();
+  if(!msg) return;
+  inp.value = ''; inp.disabled = true;
+  const msgs = document.getElementById('crise-msgs');
+  msgs.innerHTML += `<div class="msg-wrap user"><div class="msender">VOCÊ</div><div class="bubble user">${msg}</div></div>`;
+  const wrap = document.createElement('div');
+  wrap.className = 'msg-wrap';
+  wrap.innerHTML = '<div class="msender">NORTE IA</div><div class="bubble bot" id="crise-bubble"><div class="typing"><span></span><span></span><span></span></div></div>';
+  msgs.appendChild(wrap); msgs.scrollTop = 99999;
+  try {
+    const res = await fetch('/api/chat', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({message: msg, mode: 'crisis'}) });
+    const data = await res.json();
+    const bubble = document.getElementById('crise-bubble');
+    if(bubble) await typeText(bubble, data.reply || 'Continua. Tô aqui.', 16);
+  } catch(e) {
+    const b = document.getElementById('crise-bubble');
+    if(b) b.textContent = 'Erro de conexão. Mas continua — fala o que precisar.';
+  }
+  msgs.scrollTop = 99999;
+  inp.disabled = false; inp.focus();
+}
+
+// ── RELATÓRIO SEMANAL ──
+let relatorios = JSON.parse(localStorage.getItem('norte_relatorios') || '[]');
+
+function initRelatorio(){
+  const agora = new Date();
+  const inicio = new Date(agora); inicio.setDate(agora.getDate() - agora.getDay());
+  const fim = new Date(inicio); fim.setDate(inicio.getDate() + 6);
+  const fmt = d => d.toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit'});
+  document.getElementById('rel-periodo').textContent = `SEMANA ${fmt(inicio)} — ${fmt(fim)}`;
+
+  // Stats da semana
+  const rec = entries.filter(e=>e.type==='rec').reduce((s,e)=>s+e.val,0);
+  const gas = entries.filter(e=>e.type==='gas').reduce((s,e)=>s+e.val,0);
+  const habDone = habits.filter(h=>h.done).length;
+  const taskDone = tasks.filter(t=>t.done).length;
+
+  document.getElementById('rel-stats').innerHTML = `
+    <div class="rel-stat"><div class="rel-stat-val green">${habDone}/${habits.length}</div><div class="rel-stat-label">HÁBITOS HOJE</div></div>
+    <div class="rel-stat"><div class="rel-stat-val ${totalXP>0?'gold':''}">${totalXP}</div><div class="rel-stat-label">XP TOTAL</div></div>
+    <div class="rel-stat"><div class="rel-stat-val ${rec-gas>=0?'green':'red'}">${rec-gas>=0?'+':''}R$${Math.abs(rec-gas).toFixed(0)}</div><div class="rel-stat-label">SALDO</div></div>
+    <div class="rel-stat"><div class="rel-stat-val blue">${taskDone}/${tasks.length}</div><div class="rel-stat-label">MISSÕES</div></div>`;
+
+  // Histórico
+  if(relatorios.length > 0){
+    document.getElementById('rel-historico').style.display = 'block';
+    document.getElementById('rel-historico-list').innerHTML = relatorios.slice().reverse().map(r=>`
+      <div class="rel-historico-item">
+        <div class="rel-hist-data">${r.data}</div>
+        <div class="rel-hist-preview">${r.preview}</div>
+      </div>`).join('');
+  }
+}
+
+async function gerarRelatorio(){
+  const btn = document.getElementById('btn-gerar-rel');
+  btn.disabled = true; btn.textContent = 'GERANDO...';
+
+  const rec = entries.filter(e=>e.type==='rec').reduce((s,e)=>s+e.val,0);
+  const gas = entries.filter(e=>e.type==='gas').reduce((s,e)=>s+e.val,0);
+  const habDone = habits.filter(h=>h.done).length;
+  const streaks = habits.map(h=>`${h.name}: ${h.streak} dias`).join(', ');
+  const taskDone = tasks.filter(t=>t.done).length;
+  const cargo = getCargo(totalXP).nome;
+
+  const contexto = `
+DADOS DA SEMANA DO USUÁRIO NO APP NORTE:
+- Cargo atual: ${cargo} (${totalXP} XP)
+- Hábitos completados hoje: ${habDone} de ${habits.length}
+- Streaks: ${streaks || 'nenhum'}
+- Missões concluídas: ${taskDone} de ${tasks.length}
+- Receitas lançadas: R$${rec.toFixed(2)}
+- Gastos lançados: R$${gas.toFixed(2)}
+- Saldo: R$${(rec-gas).toFixed(2)}
+- Entradas financeiras: ${entries.length} lançamentos
+- XP ganho hoje das missões diárias: ${xpGanhoHoje} de ${XP_TETO_DIARIO} possíveis`;
+
+  try {
+    const res = await fetch('/api/chat', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({message: contexto, mode: 'report'}) });
+    const data = await res.json();
+    const relatorio = data.reply || 'Não foi possível gerar o relatório.';
+    const agora = new Date().toLocaleDateString('pt-BR');
+
+    // Salva histórico
+    relatorios.push({ data: agora, preview: relatorio.substring(0,80)+'...', completo: relatorio });
+    if(relatorios.length > 10) relatorios.shift();
+    localStorage.setItem('norte_relatorios', JSON.stringify(relatorios));
+
+    // Exibe
+    document.getElementById('rel-output-wrap').style.display = 'block';
+    document.getElementById('rel-output-date').textContent = agora;
+    const body = document.getElementById('rel-output-body');
+    body.textContent = '';
+    await typeText(body, relatorio, 12);
+    document.getElementById('rel-output-wrap').scrollIntoView({behavior:'smooth'});
+  } catch(e) {
+    alert('Erro ao gerar relatório. Verifica sua conexão.');
+  }
+
+  btn.disabled = false; btn.textContent = 'GERAR NOVO RELATÓRIO';
+}
+
+// ── ANÁLISE FINANCEIRA ──
+async function analisarGrana(){
+  const btn = document.getElementById('btn-analise');
+  if(btn.disabled) return;
+  btn.disabled = true; btn.textContent = '✦ ANALISANDO...';
+
+  const rec = entries.filter(e=>e.type==='rec').reduce((s,e)=>s+e.val,0);
+  const gas = entries.filter(e=>e.type==='gas').reduce((s,e)=>s+e.val,0);
+  const lista = entries.map(e=>`${e.date} — ${e.desc}: ${e.type==='rec'?'+':'-'}R$${e.val.toFixed(2)}`).join('\n');
+
+  const contexto = `
+DADOS FINANCEIROS DO USUÁRIO:
+Receitas totais: R$${rec.toFixed(2)}
+Gastos totais: R$${gas.toFixed(2)}
+Saldo: R$${(rec-gas).toFixed(2)}
+
+Lançamentos detalhados:
+${lista || 'Nenhum lançamento registrado ainda.'}`;
+
+  try {
+    const res = await fetch('/api/chat', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({message: contexto, mode: 'analysis'}) });
+    const data = await res.json();
+    const output = document.getElementById('analise-output');
+    output.style.display = 'block';
+    output.textContent = '';
+    await typeText(output, data.reply || 'Sem análise disponível.', 14);
+    output.scrollIntoView({behavior:'smooth'});
+  } catch(e) {
+    alert('Erro na análise. Verifica sua conexão.');
+  }
+
+  btn.disabled = false; btn.textContent = '✦ NORTE IA — ANALISAR MINHA GRANA';
+}
 const DAILY_MISSIONS = [
   {id:'dm_ia',    nome:'Falar com a NORTE IA',         desc:'Mande pelo menos 1 mensagem hoje',      xp:5,  auto:true,  done:false},
   {id:'dm_grana', nome:'Registrar grana do dia',        desc:'Lance uma entrada ou saída no módulo',  xp:5,  auto:true,  done:false},
@@ -843,6 +1111,8 @@ function renderEntries(){
   const sal=rec-gas;const se=document.getElementById('g-sal');
   se.textContent=fmt(sal);se.className='gc-v '+(sal>=0?'pos':'neg');
   document.getElementById('ecount').textContent=entries.length;
+  const analiseWrap = document.getElementById('analise-wrap');
+  if(analiseWrap) analiseWrap.style.display = entries.length >= 2 ? 'block' : 'none';
   const l=document.getElementById('elist');
   if(!entries.length){l.innerHTML='<div class="empty">Nenhum lançamento ainda</div>';return;}
   l.innerHTML=[...entries].reverse().map(e=>`<div class="eitem"><div class="edot ${e.type==='rec'?'pos':'neg'}"></div><div class="edesc">${e.desc}</div><div class="edate">${e.date}</div><div class="eval ${e.type==='rec'?'pos':'neg'}">${e.type==='rec'?'+':'-'}${fmt(e.val)}</div><button class="edel" onclick="delEntry(${e.id})">×</button></div>`).join('');
