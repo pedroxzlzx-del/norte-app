@@ -9,48 +9,60 @@ export default async function handler(req) {
     const { message, history } = await req.json();
     const apiKey = process.env.GEMINI_API_KEY;
 
-    const systemPrompt = `Você é a NORTE IA, assistente pessoal da plataforma NORTE — um app de performance masculina focado em grana, disciplina e produtividade.
-
-Seu estilo:
-- Linguagem informal, direta, sem rodeios
-- Sem papo de coach motivacional ou frases de efeito
-- Fala como um amigo inteligente que entende de finanças e disciplina
-- Respostas curtas e objetivas — máximo 3 parágrafos
-- Quando o usuário falar de grana, pergunte números concretos
-- Quando falar de hábitos, pergunte sobre gatilhos e horários
-- Nunca diga "ótima pergunta" ou "com certeza"
-- Use "você" e não "tu"
-- Pode usar palavras como "cara", "parceiro", "direto ao ponto"`;
+    if (!apiKey) {
+      return new Response(JSON.stringify({ reply: 'Chave de API não configurada.' }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
 
     const contents = [];
+
     if (history && history.length > 0) {
-      history.forEach(msg => {
+      history.slice(-8).forEach(msg => {
         contents.push({
           role: msg.role === 'user' ? 'user' : 'model',
           parts: [{ text: msg.content }]
         });
       });
     }
-    contents.push({ role: 'user', parts: [{ text: message }] });
 
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          system_instruction: { parts: [{ text: systemPrompt }] },
-          contents,
-          generationConfig: {
-            temperature: 0.8,
-            maxOutputTokens: 300,
-          }
-        })
-      }
-    );
+    contents.push({
+      role: 'user',
+      parts: [{ text: `[Contexto: você é a NORTE IA, assistente informal e direto de um app masculino de produtividade e finanças. Fala como amigo, sem coach, sem motivacional, máximo 3 parágrafos curtos.]\n\n${message}` }]
+    });
+
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents,
+        generationConfig: {
+          temperature: 0.8,
+          maxOutputTokens: 256,
+        }
+      })
+    });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      return new Response(JSON.stringify({ reply: `Erro na API: ${response.status}` }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
 
     const data = await response.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Não consegui processar sua mensagem. Tenta de novo.';
+    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!text) {
+      return new Response(JSON.stringify({ reply: 'Sem resposta da IA. Tenta de novo.' }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
 
     return new Response(JSON.stringify({ reply: text }), {
       status: 200,
@@ -58,8 +70,8 @@ Seu estilo:
     });
 
   } catch (err) {
-    return new Response(JSON.stringify({ reply: 'Erro interno. Tenta de novo em instantes.' }), {
-      status: 500,
+    return new Response(JSON.stringify({ reply: `Erro: ${err.message}` }), {
+      status: 200,
       headers: { 'Content-Type': 'application/json' }
     });
   }
