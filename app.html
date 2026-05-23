@@ -235,22 +235,26 @@ body{background:var(--bg);color:var(--tx);font-family:var(--body);display:flex;f
 .promo-desc{font-size:11px;color:var(--mt2);margin-top:2px;}
 .promo-timer{font-family:var(--mono);font-size:10px;color:#e8631a;margin-top:4px;}
 
-.loja-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.loja-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
 .reward-card{background:var(--s1);border:1px solid var(--bd);padding:22px;position:relative;transition:all 0.22s;}
 .reward-card.disponivel{border-color:rgba(255,215,0,0.2);}
 .reward-card.disponivel:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 8px 32px rgba(255,215,0,0.08);}
 .reward-card.bloqueado{opacity:0.55;}
-.reward-icon{font-size:28px;margin-bottom:12px;}
-.reward-nome{font-family:var(--display);font-size:20px;letter-spacing:1px;margin-bottom:6px;}
-.reward-desc{font-size:11px;color:var(--mt);line-height:1.6;margin-bottom:14px;}
-.reward-custo{font-family:var(--mono);font-size:11px;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.reward-card{background:var(--s1);border:1px solid var(--bd);padding:16px;position:relative;transition:all 0.22s;}
+.reward-card.disponivel{border-color:rgba(255,215,0,0.2);}
+.reward-card.disponivel:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 8px 32px rgba(255,215,0,0.08);}
+.reward-card.bloqueado{opacity:0.55;}
+.reward-icon{font-size:22px;margin-bottom:10px;}
+.reward-nome{font-family:var(--display);font-size:17px;letter-spacing:1px;margin-bottom:5px;}
+.reward-desc{font-size:11px;color:var(--mt);line-height:1.5;margin-bottom:12px;}
+.reward-custo{font-family:var(--mono);font-size:10px;color:var(--gold);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
 .reward-custo.promo{color:#e8631a;}
-.reward-original{text-decoration:line-through;color:var(--mt);font-size:10px;}
-.btn-resgatar{width:100%;padding:10px;font-family:var(--mono);font-size:10px;letter-spacing:1px;cursor:pointer;transition:all 0.2s;border:1px solid var(--gold);color:var(--gold);background:transparent;}
+.reward-original{text-decoration:line-through;color:var(--mt);font-size:9px;}
+.btn-resgatar{width:100%;padding:8px;font-family:var(--mono);font-size:9px;letter-spacing:1px;cursor:pointer;transition:all 0.2s;border:1px solid var(--gold);color:var(--gold);background:transparent;}
 .btn-resgatar:hover:not(:disabled){background:var(--gold);color:var(--bg);}
 .btn-resgatar:disabled{border-color:var(--mt);color:var(--mt);cursor:not-allowed;}
 .btn-resgatar.resgatado{border-color:var(--green);color:var(--green);background:rgba(46,204,113,0.1);}
-.reward-badge{position:absolute;top:12px;right:12px;font-family:var(--mono);font-size:8px;padding:2px 8px;letter-spacing:1px;}
+.reward-badge{position:absolute;top:10px;right:10px;font-family:var(--mono);font-size:8px;padding:2px 6px;letter-spacing:1px;}
 .badge-disp{background:rgba(255,215,0,0.15);color:var(--gold);}
 .badge-lock{background:rgba(86,96,112,0.3);color:var(--mt);}
 .badge-promo{background:rgba(232,99,26,0.2);color:#e8631a;}
@@ -286,7 +290,8 @@ body{background:var(--bg);color:var(--tx);font-family:var(--body);display:flex;f
   .sidebar-header{display:flex;}
   .main{padding:14px;}
   .cards-row,.grana-top,.disc-row{grid-template-columns:1fr;gap:8px;}
-  .row2,.course-grid,.loja-grid{grid-template-columns:1fr;gap:8px;}
+  .row2,.course-grid{grid-template-columns:1fr;gap:8px;}
+  .loja-grid{grid-template-columns:repeat(2,1fr);gap:8px;}
   .add-row{flex-direction:column;}
   .inp,.sel,.btn-add{width:100%;}
   .btn-add{text-align:center;padding:11px;}
@@ -614,11 +619,14 @@ function ganharXP(qtd, motivo){
 // ── REWARDS ──
 const PROMO_ATIVA = false; // mude para true para ativar promoção
 const REWARDS=[
+  // Digital
   {id:'badge',icon:'🎖️',nome:'BADGE ELITE',desc:'Badge exclusivo no perfil + tema dourado desbloqueado no app.',custo:1500,tipo:'digital'},
+  // Assinatura
   {id:'mes1',icon:'📅',nome:'1 MÊS GRÁTIS',desc:'Um mês de assinatura NORTE sem custo. Aplicado na próxima renovação.',custo:2700,tipo:'assinatura'},
-  {id:'ifood15',icon:'🍔',nome:'iFood R$15',desc:'Crédito iFood de R$15 enviado por e-mail em até 48h úteis.',custo:3600,tipo:'fisico'},
   {id:'mes3',icon:'📅',nome:'3 MESES GRÁTIS',desc:'Três meses de assinatura NORTE sem custo. Melhor custo-benefício.',custo:5400,tipo:'assinatura'},
-  {id:'ifood30',icon:'🍔',nome:'iFood R$30',desc:'Crédito iFood de R$30 enviado por e-mail em até 48h úteis.',custo:5850,tipo:'fisico'},
+  // iFood
+  {id:'ifood15',icon:'🍔',nome:'iFOOD R$15',desc:'Crédito iFood de R$15 enviado por e-mail em até 48h úteis.',custo:3600,tipo:'fisico'},
+  {id:'ifood30',icon:'🍔',nome:'iFOOD R$30',desc:'Crédito iFood de R$30 enviado por e-mail em até 48h úteis.',custo:5850,tipo:'fisico'},
 ];
 let resgatados=new Set();
 let resgateAtual=null;
