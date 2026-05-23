@@ -171,6 +171,29 @@ body{background:var(--bg);color:var(--tx);font-family:var(--body);display:flex;f
 .hfs{font-family:var(--display);font-size:20px;color:var(--ac);flex-shrink:0;transition:transform 0.2s;}
 .hfrow:hover .hfs{transform:scale(1.15);}
 
+/* MISSÕES DIÁRIAS */
+.daily-bar-wrap{height:4px;background:var(--bd);border-radius:2px;overflow:hidden;margin-bottom:6px;}
+.daily-bar-fill{height:100%;background:linear-gradient(90deg,var(--ac),var(--gold));border-radius:2px;transition:width 0.4s ease;width:0%;}
+.daily-reset{font-family:var(--mono);font-size:9px;color:var(--mt);margin-bottom:14px;}
+.daily-mission{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--bd);cursor:pointer;transition:all 0.18s;}
+.daily-mission:last-child{border-bottom:none;}
+.daily-mission:hover{padding-left:4px;}
+.daily-mission.completed{opacity:0.5;}
+.dm-check{width:20px;height:20px;border:1.5px solid var(--bd2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.2s;border-radius:3px;}
+.dm-check.done{background:var(--gold);border-color:var(--gold);animation:checkPop 0.3s ease;}
+.dm-check.done::after{content:'✓';font-size:10px;color:var(--bg);font-weight:700;}
+.dm-check.auto{border-color:var(--ac);border-style:dashed;cursor:default;}
+.dm-check.auto.done{background:var(--ac);border-color:var(--ac);border-style:solid;}
+.dm-info{flex:1;}
+.dm-nome{font-size:13px;font-weight:500;transition:color 0.2s;}
+.dm-nome.done{color:var(--mt);text-decoration:line-through;}
+.dm-desc{font-size:10px;color:var(--mt);margin-top:1px;font-family:var(--mono);}
+.dm-xp{font-family:var(--display);font-size:18px;color:var(--gold);flex-shrink:0;}
+.dm-xp.done{color:var(--mt);}
+.dm-tipo{font-family:var(--mono);font-size:8px;padding:1px 6px;border-radius:2px;flex-shrink:0;}
+.dm-auto{background:rgba(29,111,164,0.15);color:var(--ac);}
+.dm-manual{background:rgba(255,215,0,0.1);color:var(--gold);}
+
 /* MISSÕES */
 .miss-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;}
 .ftabs{display:flex;gap:3px;}
@@ -433,18 +456,32 @@ body{background:var(--bg);color:var(--tx);font-family:var(--body);display:flex;f
 
     <!-- MISSÕES -->
     <div class="panel" id="panel-missoes">
-      <div class="sec-h">MISSÕES</div><div class="sec-s">// GESTÃO DE TAREFAS</div>
-      <div class="add-row">
-        <input class="inp" id="new-task" placeholder="Nova missão...">
-        <select class="sel" id="task-pri"><option value="high">🔴 Alta</option><option value="med" selected>🔵 Média</option><option value="low">🟢 Baixa</option></select>
-        <button class="btn-add" onclick="addTask()">+ MISSÃO</button>
+      <div class="sec-h">MISSÕES</div><div class="sec-s">// MISSÕES DIÁRIAS + SUAS TAREFAS</div>
+
+      <!-- MISSÕES DIÁRIAS -->
+      <div class="block" style="margin-bottom:16px;">
+        <div class="block-title">
+          MISSÕES DO DIA
+          <span id="daily-progress">0/8 · 0 XP</span>
+        </div>
+        <div class="daily-bar-wrap"><div class="daily-bar-fill" id="daily-bar"></div></div>
+        <div class="daily-reset" id="daily-reset"></div>
+        <div id="daily-missions-list"></div>
       </div>
-      <div class="miss-hdr">
+
+      <!-- TAREFAS MANUAIS -->
+      <div class="block-title" style="margin-top:20px;margin-bottom:12px;">
+        SUAS TAREFAS
         <div class="ftabs">
           <div class="ftab active" onclick="filterTasks('all',this)">TODAS</div>
           <div class="ftab" onclick="filterTasks('pending',this)">PENDENTES</div>
           <div class="ftab" onclick="filterTasks('done',this)">CONCLUÍDAS</div>
         </div>
+      </div>
+      <div class="add-row">
+        <input class="inp" id="new-task" placeholder="Nova tarefa...">
+        <select class="sel" id="task-pri"><option value="high">🔴 Alta</option><option value="med" selected>🔵 Média</option><option value="low">🟢 Baixa</option></select>
+        <button class="btn-add" onclick="addTask()">+ ADD</button>
       </div>
       <div id="tasks-list"></div>
     </div>
@@ -700,7 +737,78 @@ function confirmarResgate(){
   alert(`✓ Resgate confirmado! Você receberá sua recompensa em ${email} em até 48h úteis.`);
 }
 
-// ── DADOS ──
+// ── MISSÕES DIÁRIAS ──
+const DAILY_MISSIONS = [
+  {id:'dm_ia',    nome:'Falar com a NORTE IA',         desc:'Mande pelo menos 1 mensagem hoje',      xp:10, auto:true,  done:false},
+  {id:'dm_grana', nome:'Registrar grana do dia',        desc:'Lance uma entrada ou saída no módulo',  xp:10, auto:true,  done:false},
+  {id:'dm_hab',   nome:'Completar todos os hábitos',    desc:'Marque 100% dos seus hábitos',          xp:15, auto:true,  done:false},
+  {id:'dm_plan',  nome:'Planejar o dia',                desc:'Crie pelo menos 3 tarefas hoje',        xp:10, auto:true,  done:false},
+  {id:'dm_exe',   nome:'Fazer exercício',               desc:'Academia, corrida, treino em casa',     xp:10, auto:false, done:false},
+  {id:'dm_agua',  nome:'Beber 2L de água',              desc:'Hidratação é disciplina também',        xp:5,  auto:false, done:false},
+  {id:'dm_ler',   nome:'Ler por 20 minutos',            desc:'Livro, artigo, qualquer coisa útil',    xp:10, auto:false, done:false},
+  {id:'dm_foco',  nome:'Sem redes pela manhã',          desc:'Fique offline até o almoço',            xp:10, auto:false, done:false},
+];
+
+const todayKey = new Date().toDateString();
+const savedDaily = JSON.parse(localStorage.getItem('norte_daily_'+todayKey)||'{}');
+DAILY_MISSIONS.forEach(m=>{if(savedDaily[m.id])m.done=true;});
+
+function saveDailyState(){
+  const state={};
+  DAILY_MISSIONS.forEach(m=>{if(m.done)state[m.id]=true;});
+  localStorage.setItem('norte_daily_'+todayKey,JSON.stringify(state));
+}
+
+function toggleDailyMission(id){
+  const m=DAILY_MISSIONS.find(x=>x.id===id);
+  if(!m||m.auto)return;
+  if(m.done)return;
+  m.done=true;
+  saveDailyState();
+  ganharXP(m.xp, m.nome+'!');
+  renderDailyMissions();
+}
+
+function checkAutoMissions(){
+  // IA usada
+  const mIa=DAILY_MISSIONS.find(x=>x.id==='dm_ia');
+  if(iaUsadaHoje&&!mIa.done){mIa.done=true;saveDailyState();ganharXP(mIa.xp,'Missão: Falar com a NORTE IA!');}
+  // Grana lançada
+  const mGrana=DAILY_MISSIONS.find(x=>x.id==='dm_grana');
+  if(granaLancadoHoje&&!mGrana.done){mGrana.done=true;saveDailyState();ganharXP(mGrana.xp,'Missão: Registrar grana!');}
+  // Todos hábitos
+  const mHab=DAILY_MISSIONS.find(x=>x.id==='dm_hab');
+  if(habits.length&&habits.every(h=>h.done)&&!mHab.done){mHab.done=true;saveDailyState();ganharXP(mHab.xp,'Missão: Todos os hábitos!');}
+  // Planejou o dia
+  const mPlan=DAILY_MISSIONS.find(x=>x.id==='dm_plan');
+  if(tasks.length>=3&&!mPlan.done){mPlan.done=true;saveDailyState();ganharXP(mPlan.xp,'Missão: Dia planejado!');}
+  renderDailyMissions();
+}
+
+function renderDailyMissions(){
+  const done=DAILY_MISSIONS.filter(m=>m.done).length;
+  const xpGanho=DAILY_MISSIONS.filter(m=>m.done).reduce((s,m)=>s+m.xp,0);
+  const total=DAILY_MISSIONS.length;
+  const pct=Math.round(done/total*100);
+  document.getElementById('daily-progress').textContent=`${done}/${total} · ${xpGanho} XP`;
+  document.getElementById('daily-bar').style.width=pct+'%';
+  // Reset timer
+  const now2=new Date();
+  const midnight=new Date(now2);midnight.setHours(24,0,0,0);
+  const diff=midnight-now2;
+  const h=Math.floor(diff/3600000);const m2=Math.floor((diff%3600000)/60000);
+  document.getElementById('daily-reset').textContent=`Reinicia em ${h}h ${m2}min`;
+  document.getElementById('daily-missions-list').innerHTML=DAILY_MISSIONS.map(m=>`
+    <div class="daily-mission ${m.done?'completed':''}" onclick="toggleDailyMission('${m.id}')">
+      <div class="dm-check ${m.done?'done':''} ${m.auto?'auto':''}"></div>
+      <div class="dm-info">
+        <div class="dm-nome ${m.done?'done':''}">${m.nome}</div>
+        <div class="dm-desc">${m.desc}</div>
+      </div>
+      <span class="dm-tipo ${m.auto?'dm-auto':'dm-manual'}">${m.auto?'AUTO':'MANUAL'}</span>
+      <div class="dm-xp ${m.done?'done':''}">+${m.xp}</div>
+    </div>`).join('');
+}
 let entries=[],taskFilter='all';
 let habits=[{id:1,name:'Acordar 6h',done:false,streak:3},{id:2,name:'Exercício',done:false,streak:7},{id:3,name:'Leitura 20min',done:true,streak:12},{id:4,name:'Sem redes manhã',done:false,streak:1}];
 let tasks=[{id:1,title:'Fechar contrato cliente X',pri:'high',done:false},{id:2,title:'Revisar planilha de gastos',pri:'med',done:false},{id:3,title:'Ligar pro banco',pri:'med',done:true},{id:4,title:'Estudar 1h',pri:'low',done:false}];
@@ -716,7 +824,7 @@ function addEntry(){
   entries.push({id:Date.now(),desc:d,val:v,type:t,date:new Date().toLocaleDateString('pt-BR')});
   document.getElementById('g-desc').value='';document.getElementById('g-val').value='';
   if(!granaLancadoHoje){granaLancadoHoje=true;ganharXP(15,'Grana lançada!');}
-  renderEntries();updateDashboard();
+  renderEntries();updateDashboard();checkAutoMissions();
 }
 function delEntry(id){entries=entries.filter(e=>e.id!==id);renderEntries();updateDashboard();}
 function renderEntries(){
@@ -743,7 +851,7 @@ function toggleHabit(id){
     if(allDone)ganharXP(30,'Todos os hábitos do dia!');
     if(h.streak===7)ganharXP(50,'Streak de 7 dias!');
   } else {if(h.streak>0)h.streak--;}
-  renderHabits();updateDashboard();
+  renderHabits();updateDashboard();checkAutoMissions();
 }
 function renderHabits(){
   const done=habits.filter(h=>h.done).length;
@@ -759,7 +867,7 @@ function renderHabits(){
 }
 
 // ── TAREFAS ──
-function addTask(){const t=document.getElementById('new-task').value.trim();const p=document.getElementById('task-pri').value;if(!t)return;tasks.push({id:Date.now(),title:t,pri:p,done:false});document.getElementById('new-task').value='';renderTasks();updateDashboard();}
+function addTask(){const t=document.getElementById('new-task').value.trim();const p=document.getElementById('task-pri').value;if(!t)return;tasks.push({id:Date.now(),title:t,pri:p,done:false});document.getElementById('new-task').value='';renderTasks();updateDashboard();checkAutoMissions();}
 function toggleTask(id){
   const t=tasks.find(x=>x.id===id);t.done=!t.done;
   if(t.done&&t.pri==='high')ganharXP(25,'Missão urgente concluída!');
@@ -788,7 +896,7 @@ function updateDashboard(){
   document.getElementById('db-tasks').textContent=tasks.filter(t=>t.done).length+'/'+tasks.length;
   updateXPUI();
 }
-function updateAll(){renderEntries();renderHabits();renderTasks();updateDashboard();}
+function updateAll(){renderEntries();renderHabits();renderTasks();updateDashboard();renderDailyMissions();}
 updateAll();
 
 // ── IA CHAT ──
@@ -809,7 +917,7 @@ async function sendMsg(){
   const wrap=document.createElement('div');wrap.className='mwrap';
   wrap.innerHTML='<div class="msender">NORTE IA</div><div class="bubble bot" id="typing-bubble"><div class="typing"><span></span><span></span><span></span></div></div>';
   msgs.appendChild(wrap);msgs.scrollTop=99999;
-  if(!iaUsadaHoje){iaUsadaHoje=true;ganharXP(10,'Pergunta na NORTE IA!');}
+  if(!iaUsadaHoje){iaUsadaHoje=true;ganharXP(10,'Pergunta na NORTE IA!');checkAutoMissions();}
   try{
     const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg})});
     const data=await res.json();
