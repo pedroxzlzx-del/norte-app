@@ -234,12 +234,7 @@ async function doLogin(){
   if(!ok)return;
   setLoading('btn-login',true,'ENTRANDO...');
   await new Promise(r=>setTimeout(r,1400));
-  // Verifica se já fez onboarding
-  if(localStorage.getItem('norte_onboarding_done')==='1'){
-    window.location.href='/app.html';
-  } else {
-    window.location.href='/onboarding.html';
-  }
+  window.location.href='/onboarding.html';
 }
 async function doCadastro(){
   const nome=document.getElementById('c-nome').value.trim();
