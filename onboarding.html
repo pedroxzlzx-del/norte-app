@@ -368,7 +368,7 @@ function mostrarFinal(){
 function entrarNoDashboard(){
   localStorage.setItem('norte_onboarding_done', '1');
   localStorage.setItem('norte_perfil', JSON.stringify(perfil));
-  window.location.href = 'app.html';
+  window.location.href = '/app.html';
 }
 
 // ── FLUXO PRINCIPAL ──
@@ -461,7 +461,7 @@ async function iniciar(){
 
 // Verificar se já fez onboarding
 if(localStorage.getItem('norte_onboarding_done') === '1'){
-  window.location.href = 'app.html';
+  window.location.href = '/app.html';
 } else {
   iniciar();
 }
