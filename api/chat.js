@@ -17,85 +17,52 @@ export default async function handler(req) {
 
     const prompt = `Você é a NORTE IA, assistente pessoal do app NORTE — plataforma masculina de produtividade, disciplina e controle financeiro.
 
-REGRAS DE COMPORTAMENTO:
-- Fale sempre de forma informal, direta, como um amigo próximo que entende de finanças e disciplina
-- NUNCA use palavras como "coach", "jornada", "potencial", "incrível", "fantástico"
-- NUNCA comece com "Oi", "Olá" ou saudações — vá direto ao ponto
-- Mencione "NORTE" naturalmente quando fizer sentido, como em "aqui no NORTE você pode...", "o NORTE tem um módulo pra isso..."
-- Respostas curtas e diretas — máximo 3 frases por parágrafo
-- Se o usuário falar de grana: pergunte números concretos
-- Se falar de hábitos: pergunte sobre horários e gatilhos
-- Pode usar gírias leves: "cara", "parceiro", "direto ao ponto", "sem mimimi"
-- Fale sempre em português brasileiro
-- Tom: amigo inteligente, não robô, não guru, não coach
+REGRAS:
+- Informal e direto, como um amigo próximo inteligente
+- NUNCA use: "coach", "jornada", "potencial", "incrível", "fantástico", "com certeza"
+- NUNCA comece com saudações — vá direto ao assunto
+- Mencione "NORTE" naturalmente quando fizer sentido
+- Máximo 4 frases no total — seja conciso
+- Se falar de grana: pergunte números concretos
+- Se falar de hábitos: pergunte horários e gatilhos
+- Use: "cara", "parceiro", "direto ao ponto"
+- Sempre em português brasileiro
+- Tom: amigo esperto, não robô, não guru
+
+Responda em no máximo 4 frases curtas.
 
 Usuário disse: ${message}`;
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?key=${apiKey}&alt=sse`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.85, maxOutputTokens: 512 }
+        generationConfig: { temperature: 0.85, maxOutputTokens: 800 }
       })
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-      const err = await response.json();
       return new Response(
-        JSON.stringify({ reply: `Erro ${response.status}: ${err?.error?.message || 'tenta de novo.'}` }),
+        JSON.stringify({ reply: `Erro ${response.status}: ${data?.error?.message || 'tenta de novo.'}` }),
         { status: 200, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
-    // Streaming — repassa direto pro cliente
-    const { readable, writable } = new TransformStream();
-    const writer = writable.getWriter();
-    const encoder = new TextEncoder();
+    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || 'Sem resposta. Tenta de novo.';
 
-    (async () => {
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      try {
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          const chunk = decoder.decode(value);
-          const lines = chunk.split('\n');
-          for (const line of lines) {
-            if (line.startsWith('data: ')) {
-              const jsonStr = line.slice(6).trim();
-              if (jsonStr === '[DONE]') continue;
-              try {
-                const parsed = JSON.parse(jsonStr);
-                const text = parsed?.candidates?.[0]?.content?.parts?.[0]?.text;
-                if (text) {
-                  await writer.write(encoder.encode(`data: ${JSON.stringify({ token: text })}\n\n`));
-                }
-              } catch {}
-            }
-          }
-        }
-      } finally {
-        await writer.write(encoder.encode('data: [DONE]\n\n'));
-        await writer.close();
-      }
-    })();
-
-    return new Response(readable, {
+    return new Response(JSON.stringify({ reply: text }), {
       status: 200,
-      headers: {
-        'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive',
-      }
+      headers: { 'Content-Type': 'application/json' }
     });
 
   } catch (err) {
     return new Response(
-      JSON.stringify({ reply: `Erro interno: ${err.message}` }),
+      JSON.stringify({ reply: `Erro: ${err.message}` }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
   }
