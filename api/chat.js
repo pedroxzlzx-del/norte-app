@@ -6,73 +6,45 @@ export default async function handler(req) {
   }
 
   try {
-    const { message, history } = await req.json();
+    const { message } = await req.json();
     const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
       return new Response(JSON.stringify({ reply: 'Chave de API não configurada.' }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
+        status: 200, headers: { 'Content-Type': 'application/json' }
       });
     }
 
-    const contents = [];
+    const prompt = `Você é a NORTE IA, assistente pessoal de um app masculino de produtividade e finanças chamado NORTE. Seja direto, informal, como um amigo inteligente. Sem papo de coach, sem frases motivacionais. Máximo 2 parágrafos curtos. Responda em português brasileiro.\n\nUsuário disse: ${message}`;
 
-    if (history && history.length > 0) {
-      history.slice(-8).forEach(msg => {
-        contents.push({
-          role: msg.role === 'user' ? 'user' : 'model',
-          parts: [{ text: msg.content }]
-        });
-      });
-    }
-
-    contents.push({
-      role: 'user',
-      parts: [{ text: `[Contexto: você é a NORTE IA, assistente informal e direto de um app masculino de produtividade e finanças. Fala como amigo, sem coach, sem motivacional, máximo 3 parágrafos curtos.]\n\n${message}` }]
-    });
-
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
 
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        contents,
-        generationConfig: {
-          temperature: 0.8,
-          maxOutputTokens: 256,
-        }
+        contents: [{ role: 'user', parts: [{ text: prompt }] }],
+        generationConfig: { temperature: 0.7, maxOutputTokens: 200 }
       })
     });
 
-    if (!response.ok) {
-      const errText = await response.text();
-      return new Response(JSON.stringify({ reply: `Erro na API: ${response.status}` }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
-
     const data = await response.json();
-    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
 
-    if (!text) {
-      return new Response(JSON.stringify({ reply: 'Sem resposta da IA. Tenta de novo.' }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
+    if (!response.ok) {
+      return new Response(JSON.stringify({ reply: `Erro ${response.status}: ${data?.error?.message || 'tenta de novo em instantes.'}` }), {
+        status: 200, headers: { 'Content-Type': 'application/json' }
       });
     }
+
+    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || 'Sem resposta. Tenta de novo.';
 
     return new Response(JSON.stringify({ reply: text }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
+      status: 200, headers: { 'Content-Type': 'application/json' }
     });
 
   } catch (err) {
-    return new Response(JSON.stringify({ reply: `Erro: ${err.message}` }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
+    return new Response(JSON.stringify({ reply: `Erro interno: ${err.message}` }), {
+      status: 200, headers: { 'Content-Type': 'application/json' }
     });
   }
 }
