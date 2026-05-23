@@ -17,7 +17,7 @@ export default async function handler(req) {
 
     const prompt = `Você é a NORTE IA, assistente pessoal de um app masculino de produtividade e finanças chamado NORTE. Seja direto, informal, como um amigo inteligente. Sem papo de coach, sem frases motivacionais. Máximo 2 parágrafos curtos. Responda em português brasileiro.\n\nUsuário disse: ${message}`;
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
     const response = await fetch(url, {
       method: 'POST',
