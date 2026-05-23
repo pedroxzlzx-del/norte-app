@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NORTE — Painel</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --ac:#1D6FA4;--ac2:#155480;--ac3:rgba(29,111,164,0.1);
+  --bg:#080C10;--s1:#0D1218;--s2:#121920;
+  --bd:#1E2A36;--bd2:#243040;--tx:#ECF0F4;--mt:#556070;--mt2:#7A8FA0;
+  --green:#2ECC71;--red:#E74C3C;--amber:#F0A500;
+  --display:'Bebas Neue',sans-serif;--mono:'JetBrains Mono',monospace;--body:'Inter',sans-serif;
+  --sidebar-w:196px;
+}
+html,body{height:100%;}
+body{background:var(--bg);color:var(--tx);font-family:var(--body);display:flex;flex-direction:column;overflow:hidden;}
+
+/* TOPBAR */
+.topbar{background:var(--s1);border-bottom:1px solid var(--bd);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:50;gap:10px;}
+.logo{font-family:var(--display);font-size:20px;letter-spacing:4px;text-decoration:none;color:var(--tx);}
+.logo span{color:var(--ac);}
+.topbar-center{display:flex;align-items:center;gap:10px;flex:1;justify-content:center;}
+.day-badge{font-family:var(--mono);font-size:10px;color:var(--ac);background:var(--ac3);border:1px solid rgba(29,111,164,0.25);padding:4px 10px;letter-spacing:1px;white-space:nowrap;}
+.user-info{display:flex;align-items:center;gap:8px;}
+.avatar{width:30px;height:30px;border-radius:50%;background:var(--ac);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#fff;flex-shrink:0;}
+.user-name{font-size:12px;color:var(--mt2);white-space:nowrap;}
+.hamburger{display:none;background:none;border:1px solid var(--bd);color:var(--tx);padding:7px 10px;cursor:pointer;font-size:16px;flex-shrink:0;line-height:1;}
+.hamburger:hover{border-color:var(--ac);color:var(--ac);}
+
+/* LAYOUT */
+.app{display:flex;flex:1;overflow:hidden;position:relative;}
+
+/* OVERLAY — mobile */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:90;}
+.sidebar-overlay.show{display:block;}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar-w);background:var(--s1);border-right:1px solid var(--bd);padding:16px 0;display:flex;flex-direction:column;gap:2px;flex-shrink:0;transition:transform 0.25s ease;z-index:100;overflow-y:auto;}
+.sidebar-header{display:none;align-items:center;justify-content:space-between;padding:0 16px 16px;border-bottom:1px solid var(--bd);margin-bottom:8px;}
+.close-sidebar{background:none;border:none;color:var(--mt);cursor:pointer;font-size:20px;padding:4px;}
+.close-sidebar:hover{color:var(--tx);}
+.nav-item{display:flex;align-items:center;gap:11px;padding:11px 18px;cursor:pointer;transition:all 0.15s;border-left:2px solid transparent;font-size:12px;color:var(--mt2);user-select:none;}
+.nav-item:hover{background:var(--s2);color:var(--tx);}
+.nav-item.active{background:var(--s2);color:var(--ac);border-left-color:var(--ac);}
+.nav-item .ni{font-size:15px;width:17px;text-align:center;flex-shrink:0;}
+.nav-section{padding:14px 18px 4px;font-family:var(--mono);font-size:9px;color:var(--mt);letter-spacing:2px;}
+.sidebar-bottom{margin-top:auto;padding:14px 0;border-top:1px solid var(--bd);}
+.logout{font-family:var(--mono);font-size:10px;color:var(--mt);text-decoration:none;display:flex;align-items:center;gap:8px;padding:11px 18px;}
+.logout:hover{color:var(--red);}
+
+/* MAIN */
+.main{flex:1;overflow-y:auto;padding:20px;}
+.panel{display:none;}.panel.active{display:block;}
+
+/* DASHBOARD */
+.greeting{margin-bottom:20px;}
+.greeting-sub{font-family:var(--mono);font-size:10px;color:var(--ac);letter-spacing:2px;margin-bottom:4px;}
+.greeting-title{font-family:var(--display);font-size:clamp(28px,5vw,38px);line-height:1;letter-spacing:1px;}
+.greeting-title span{color:var(--ac);}
+
+.cards-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+.card{background:var(--s1);border:1px solid var(--bd);padding:14px;}
+.card-label{font-family:var(--mono);font-size:9px;color:var(--mt);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;}
+.card-value{font-family:var(--display);font-size:clamp(24px,4vw,34px);line-height:1;letter-spacing:1px;}
+.card-value.green{color:var(--green);}.card-value.blue{color:var(--ac);}.card-value.amber{color:var(--amber);}.card-value.red{color:var(--red);}
+.card-sub{font-size:10px;color:var(--mt);margin-top:3px;font-family:var(--mono);}
+
+.row2{display:grid;grid-template-columns:1.4fr 1fr;gap:10px;margin-bottom:16px;}
+.block{background:var(--s1);border:1px solid var(--bd);padding:16px;}
+.block-title{font-family:var(--mono);font-size:9px;color:var(--mt);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;}
+.block-title span{color:var(--ac);}
+
+.habit-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--bd);cursor:pointer;}
+.habit-row:last-child{border-bottom:none;}
+.hcheck{width:17px;height:17px;border:1.5px solid var(--bd2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.hcheck.done{background:var(--ac);border-color:var(--ac);}
+.hcheck.done::after{content:'✓';font-size:9px;color:#fff;font-weight:700;}
+.hname{font-size:12px;flex:1;}.hname.done{color:var(--mt);text-decoration:line-through;}
+.streak{font-family:var(--mono);font-size:9px;color:var(--ac);}
+
+.task-row{display:flex;align-items:flex-start;gap:9px;padding:7px 0;border-bottom:1px solid var(--bd);}
+.task-row:last-child{border-bottom:none;}
+.tcheck{width:15px;height:15px;border:1.5px solid var(--bd2);flex-shrink:0;margin-top:1px;}
+.tname{font-size:12px;line-height:1.4;}.tname.done{color:var(--mt);text-decoration:line-through;}
+.tpri{font-family:var(--mono);font-size:8px;padding:1px 5px;margin-top:2px;display:inline-block;}
+.ph{background:rgba(231,76,60,0.15);color:#E74C3C;}.pm{background:rgba(29,111,164,0.15);color:var(--ac);}.pl{background:rgba(46,204,113,0.12);color:var(--green);}
+
+/* SECTION HEADERS */
+.sec-h{font-family:var(--display);font-size:28px;letter-spacing:1px;margin-bottom:2px;}
+.sec-s{font-size:11px;color:var(--mt);margin-bottom:16px;font-family:var(--mono);}
+
+/* GRANA */
+.grana-top{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+.gc{background:var(--s1);border:1px solid var(--bd);padding:14px;}
+.gc-l{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;color:var(--mt);margin-bottom:6px;}
+.gc-v{font-family:var(--display);font-size:clamp(22px,4vw,32px);}
+.gc-v.pos{color:var(--green);}.gc-v.neg{color:var(--red);}.gc-v.neu{color:var(--ac);}
+
+.add-row{display:flex;gap:7px;margin-bottom:16px;flex-wrap:wrap;}
+.inp{background:var(--s2);border:1px solid var(--bd);color:var(--tx);padding:9px 12px;font-family:var(--body);font-size:12px;flex:1;min-width:120px;outline:none;transition:border 0.15s;}
+.inp:focus{border-color:var(--ac);}.inp::placeholder{color:var(--mt);}
+.sel{background:var(--s2);border:1px solid var(--bd);color:var(--tx);padding:9px 10px;font-family:var(--body);font-size:12px;outline:none;cursor:pointer;}
+.btn-add{background:var(--ac);color:#fff;border:none;padding:9px 16px;font-family:var(--mono);font-size:10px;letter-spacing:1px;cursor:pointer;white-space:nowrap;transition:background 0.15s;}
+.btn-add:hover{background:var(--ac2);}
+
+.elist{background:var(--s1);border:1px solid var(--bd);}
+.eitem{display:flex;align-items:center;padding:10px 14px;border-bottom:1px solid var(--bd);gap:10px;}
+.eitem:last-child{border-bottom:none;}
+.edot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.edot.pos{background:var(--green);}.edot.neg{background:var(--red);}
+.edesc{flex:1;font-size:12px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.edate{font-family:var(--mono);font-size:9px;color:var(--mt);flex-shrink:0;}
+.eval{font-family:var(--mono);font-size:12px;font-weight:500;flex-shrink:0;}
+.eval.pos{color:var(--green);}.eval.neg{color:var(--red);}
+.edel{color:var(--mt);cursor:pointer;font-size:15px;background:none;border:none;flex-shrink:0;}
+.edel:hover{color:var(--red);}
+
+/* DISCIPLINA */
+.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:16px;}
+.wd{background:var(--s1);border:1px solid var(--bd);padding:7px 4px;text-align:center;}
+.wdn{font-family:var(--mono);font-size:8px;color:var(--mt);letter-spacing:1px;}
+.wds{font-family:var(--display);font-size:clamp(16px,3vw,22px);line-height:1;margin-top:3px;}
+
+.disc-row{display:grid;grid-template-columns:1fr 2fr;gap:10px;margin-bottom:16px;}
+.score-card{background:var(--s1);border:1px solid var(--bd);padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.score-n{font-family:var(--display);font-size:clamp(48px,8vw,64px);color:var(--ac);line-height:1;}
+.score-l{font-family:var(--mono);font-size:9px;color:var(--mt);letter-spacing:2px;margin-top:3px;}
+.hfull{background:var(--s1);border:1px solid var(--bd);padding:14px;}
+.hfrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--bd);cursor:pointer;}
+.hfrow:last-child{border-bottom:none;}
+.hfc{width:20px;height:20px;border:1.5px solid var(--bd2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.hfc.done{background:var(--ac);border-color:var(--ac);}
+.hfc.done::after{content:'✓';font-size:10px;color:#fff;font-weight:700;}
+.hfi{flex:1;min-width:0;}
+.hfn{font-size:13px;font-weight:500;}.hfn.done{color:var(--mt);text-decoration:line-through;}
+.hfm{font-family:var(--mono);font-size:9px;color:var(--mt);margin-top:1px;}
+.hfs{font-family:var(--display);font-size:20px;color:var(--ac);flex-shrink:0;}
+
+/* MISSÕES */
+.miss-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;}
+.ftabs{display:flex;gap:3px;}
+.ftab{background:var(--s2);border:1px solid var(--bd);color:var(--mt);padding:5px 10px;font-family:var(--mono);font-size:9px;cursor:pointer;letter-spacing:1px;transition:all 0.15s;}
+.ftab.active,.ftab:hover{background:var(--ac);color:#fff;border-color:var(--ac);}
+.tfull{background:var(--s1);border:1px solid var(--bd);padding:12px;margin-bottom:7px;display:flex;align-items:flex-start;gap:12px;}
+.tfc{width:18px;height:18px;border:1.5px solid var(--bd2);flex-shrink:0;margin-top:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.tfc.done{border-color:var(--green);}
+.tfc.done::after{content:'✓';font-size:9px;color:var(--green);font-weight:700;}
+.tfb{flex:1;min-width:0;}
+.tft{font-size:13px;font-weight:500;margin-bottom:4px;}.tft.done{color:var(--mt);text-decoration:line-through;}
+.tfdel{background:none;border:none;color:var(--mt);cursor:pointer;font-size:15px;}
+.tfdel:hover{color:var(--red);}
+
+/* IA */
+.chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 220px);min-height:350px;}
+.chat-hbar{display:flex;align-items:center;gap:9px;padding:12px 16px;background:var(--s1);border:1px solid var(--bd);border-bottom:none;}
+.cdot{width:7px;height:7px;border-radius:50%;background:var(--green);}
+.ctitle{font-family:var(--mono);font-size:10px;color:var(--mt);letter-spacing:1px;}
+.chat-msgs{flex:1;overflow-y:auto;background:var(--s1);border:1px solid var(--bd);border-bottom:none;padding:16px;display:flex;flex-direction:column;gap:12px;}
+.mwrap{display:flex;flex-direction:column;}.mwrap.user{align-items:flex-end;}
+.msender{font-family:var(--mono);font-size:8px;color:var(--mt);letter-spacing:1px;margin-bottom:3px;}
+.bubble{padding:10px 14px;font-size:12px;line-height:1.7;max-width:85%;}
+.bubble.bot{background:var(--s2);color:#9eb0c0;border-left:2px solid var(--ac);}
+.bubble.user{background:var(--ac);color:#fff;}
+.chat-in-row{display:flex;background:var(--s2);border:1px solid var(--bd);}
+.cinp{flex:1;background:transparent;border:none;color:var(--tx);padding:12px 14px;font-family:var(--body);font-size:12px;outline:none;}
+.cinp::placeholder{color:var(--mt);}
+.csend{background:var(--ac);border:none;color:#fff;padding:12px 16px;font-family:var(--mono);font-size:10px;letter-spacing:1px;cursor:pointer;}
+.csend:hover{background:var(--ac2);}
+.sugs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+.sug{background:var(--s2);border:1px solid var(--bd);color:var(--mt2);padding:5px 10px;font-size:11px;cursor:pointer;transition:all 0.15s;}
+.sug:hover{border-color:var(--ac);color:var(--ac);}
+.typing span{width:5px;height:5px;border-radius:50%;background:var(--ac);animation:blink 1.2s infinite;display:inline-block;margin:0 2px;}
+.typing span:nth-child(2){animation-delay:0.2s;}
+.typing span:nth-child(3){animation-delay:0.4s;}
+@keyframes blink{0%,80%,100%{opacity:0.2;}40%{opacity:1;}}
+
+/* CURSOS */
+.course-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.cblock{background:var(--s1);border:1px solid var(--bd);padding:18px;cursor:pointer;transition:border-color 0.15s;}
+.cblock:hover{border-color:var(--ac);}
+.ctag{font-family:var(--mono);font-size:8px;color:var(--ac);letter-spacing:2px;margin-bottom:10px;}
+.cname{font-family:var(--display);font-size:20px;margin-bottom:6px;line-height:1.1;}
+.cdesc{font-size:11px;color:var(--mt);line-height:1.6;}
+.cmeta{margin-top:10px;font-family:var(--mono);font-size:9px;color:var(--ac);}
+
+.empty{padding:16px 0;text-align:center;color:var(--mt);font-size:12px;font-family:var(--mono);}
+
+/* ── MOBILE ── */
+@media(max-width:768px){
+  body{overflow:hidden;}
+
+  .hamburger{display:flex;align-items:center;justify-content:center;}
+  .user-name{display:none;}
+  .day-badge{font-size:9px;padding:3px 8px;}
+
+  .sidebar{
+    position:fixed;left:0;top:0;bottom:0;
+    transform:translateX(-100%);
+    width:220px;
+    padding-top:0;
+    z-index:100;
+  }
+  .sidebar.open{transform:translateX(0);}
+  .sidebar-header{display:flex;}
+
+  .main{padding:14px;}
+
+  .cards-row{grid-template-columns:1fr;gap:8px;}
+  .row2{grid-template-columns:1fr;gap:8px;}
+  .grana-top{grid-template-columns:1fr;gap:8px;}
+  .disc-row{grid-template-columns:1fr;gap:8px;}
+  .course-grid{grid-template-columns:1fr;}
+
+  .add-row{flex-direction:column;}
+  .inp{min-width:unset;width:100%;}
+  .sel{width:100%;}
+  .btn-add{width:100%;text-align:center;padding:11px;}
+
+  .week-grid{gap:2px;}
+  .wd{padding:5px 2px;}
+
+  .score-card{padding:16px;flex-direction:row;gap:16px;justify-content:flex-start;}
+  .score-n{font-size:48px;}
+
+  .chat-wrap{height:calc(100vh - 180px);}
+
+  .edate{display:none;}
+  .miss-hdr{flex-direction:column;align-items:flex-start;}
+}
+
+@media(max-width:380px){
+  .logo{font-size:16px;letter-spacing:2px;}
+  .cards-row .card-value{font-size:28px;}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+  <a class="logo" href="index.html">NORT<span>E</span></a>
+  <div class="topbar-center">
+    <div class="day-badge" id="today-badge"></div>
+  </div>
+  <div class="user-info">
+    <div class="avatar">MF</div>
+    <div class="user-name">Marcos Ferreira</div>
+  </div>
+</div>
+
+<div class="app">
+  <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo" style="font-size:18px;">NORT<span style="color:var(--ac);">E</span></div>
+      <button class="close-sidebar" onclick="closeSidebar()">×</button>
+    </div>
+
+    <div class="nav-section">principal</div>
+    <div class="nav-item active" onclick="nav('dashboard',this)"><span class="ni">◈</span>Dashboard</div>
+    <div class="nav-section">módulos</div>
+    <div class="nav-item" onclick="nav('grana',this)"><span class="ni">$</span>Grana</div>
+    <div class="nav-item" onclick="nav('disciplina',this)"><span class="ni">⬡</span>Disciplina</div>
+    <div class="nav-item" onclick="nav('missoes',this)"><span class="ni">◎</span>Missões</div>
+    <div class="nav-section">suporte</div>
+    <div class="nav-item" onclick="nav('ia',this)"><span class="ni">✦</span>NORTE IA</div>
+    <div class="sidebar-bottom">
+      <div class="nav-item" onclick="nav('cursos',this)"><span class="ni">▣</span>Cursos</div>
+      <a class="logout" href="login.html">← Sair</a>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- DASHBOARD -->
+    <div class="panel active" id="panel-dashboard">
+      <div class="greeting">
+        <div class="greeting-sub">// BOM DIA, MARCOS</div>
+        <div class="greeting-title">SEU DIA COMEÇA <span>AGORA</span></div>
+      </div>
+      <div class="cards-row">
+        <div class="card"><div class="card-label">Saldo do mês</div><div class="card-value green" id="db-saldo">R$0,00</div><div class="card-sub">Atualizado agora</div></div>
+        <div class="card"><div class="card-label">Score disciplina</div><div class="card-value blue" id="db-score">0%</div><div class="card-sub">Hábitos de hoje</div></div>
+        <div class="card"><div class="card-label">Missões</div><div class="card-value amber" id="db-tasks">0/0</div><div class="card-sub">Concluídas hoje</div></div>
+      </div>
+      <div class="row2">
+        <div class="block"><div class="block-title">HÁBITOS DE HOJE <span id="hab-count">0/0</span></div><div id="dash-habits"></div></div>
+        <div class="block"><div class="block-title">MISSÕES URGENTES</div><div id="dash-tasks"></div></div>
+      </div>
+    </div>
+
+    <!-- GRANA -->
+    <div class="panel" id="panel-grana">
+      <div class="sec-h">GRANA</div><div class="sec-s">// CONTROLE FINANCEIRO</div>
+      <div class="grana-top">
+        <div class="gc"><div class="gc-l">RECEITAS</div><div class="gc-v pos" id="g-rec">R$0</div></div>
+        <div class="gc"><div class="gc-l">GASTOS</div><div class="gc-v neg" id="g-gas">R$0</div></div>
+        <div class="gc"><div class="gc-l">SALDO</div><div class="gc-v neu" id="g-sal">R$0</div></div>
+      </div>
+      <div class="add-row">
+        <input class="inp" id="g-desc" placeholder="Descrição (ex: Salário, Aluguel...)">
+        <input class="inp" id="g-val" placeholder="Valor" type="number" style="max-width:140px;">
+        <select class="sel" id="g-type"><option value="rec">+ Receita</option><option value="gas">− Gasto</option></select>
+        <button class="btn-add" onclick="addEntry()">LANÇAR</button>
+      </div>
+      <div class="block-title" style="margin-bottom:8px;">LANÇAMENTOS <span id="ecount">0</span></div>
+      <div class="elist" id="elist"><div class="empty">Nenhum lançamento ainda</div></div>
+    </div>
+
+    <!-- DISCIPLINA -->
+    <div class="panel" id="panel-disciplina">
+      <div class="sec-h">DISCIPLINA</div><div class="sec-s">// HÁBITOS E CONSISTÊNCIA</div>
+      <div class="week-grid">
+        <div class="wd"><div class="wdn">SEG</div><div class="wds" id="wd0" style="color:var(--mt);">—</div></div>
+        <div class="wd"><div class="wdn">TER</div><div class="wds" id="wd1" style="color:var(--mt);">—</div></div>
+        <div class="wd"><div class="wdn">QUA</div><div class="wds" id="wd2" style="color:var(--mt);">—</div></div>
+        <div class="wd"><div class="wdn">QUI</div><div class="wds" id="wd3" style="color:var(--mt);">—</div></div>
+        <div class="wd"><div class="wdn">SEX</div><div class="wds" id="wd4" style="color:var(--mt);">—</div></div>
+        <div class="wd"><div class="wdn">SAB</div><div class="wds" id="wd5" style="color:var(--mt);">—</div></div>
+        <div class="wd"><div class="wdn">DOM</div><div class="wds" id="wd6" style="color:var(--mt);">—</div></div>
+      </div>
+      <div class="disc-row">
+        <div class="score-card"><div class="score-n" id="disc-score-big">0%</div><div class="score-l">SCORE HOJE</div></div>
+        <div class="hfull">
+          <div class="add-row" style="margin-bottom:12px;">
+            <input class="inp" id="new-habit" placeholder="Novo hábito (ex: Acordar 6h)">
+            <button class="btn-add" onclick="addHabit()">+ ADD</button>
+          </div>
+          <div id="habits-full-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MISSÕES -->
+    <div class="panel" id="panel-missoes">
+      <div class="sec-h">MISSÕES</div><div class="sec-s">// GESTÃO DE TAREFAS</div>
+      <div class="add-row">
+        <input class="inp" id="new-task" placeholder="Nova missão...">
+        <select class="sel" id="task-pri"><option value="high">🔴 Alta</option><option value="med" selected>🔵 Média</option><option value="low">🟢 Baixa</option></select>
+        <button class="btn-add" onclick="addTask()">+ MISSÃO</button>
+      </div>
+      <div class="miss-hdr">
+        <div class="ftabs">
+          <div class="ftab active" onclick="filterTasks('all',this)">TODAS</div>
+          <div class="ftab" onclick="filterTasks('pending',this)">PENDENTES</div>
+          <div class="ftab" onclick="filterTasks('done',this)">CONCLUÍDAS</div>
+        </div>
+      </div>
+      <div id="tasks-list"></div>
+    </div>
+
+    <!-- IA -->
+    <div class="panel" id="panel-ia">
+      <div class="sec-h">NORTE IA</div><div class="sec-s">// SEU CONSULTOR PESSOAL</div>
+      <div class="sugs">
+        <div class="sug" onclick="sendSug(this)">Como organizar minha grana?</div>
+        <div class="sug" onclick="sendSug(this)">Não consigo manter hábitos</div>
+        <div class="sug" onclick="sendSug(this)">Como ser mais produtivo?</div>
+        <div class="sug" onclick="sendSug(this)">Estou ansioso</div>
+      </div>
+      <div class="chat-wrap">
+        <div class="chat-hbar"><div class="cdot"></div><span class="ctitle">NORTE IA — online agora</span></div>
+        <div class="chat-msgs" id="chat-msgs">
+          <div class="mwrap"><div class="msender">NORTE IA</div><div class="bubble bot">E aí, parceiro. Pode falar o que tá rolando — grana, disciplina, foco, cabeça. Sem enrolação, direto ao ponto. O que você precisa hoje?</div></div>
+        </div>
+        <div class="chat-in-row">
+          <input class="cinp" id="chat-input" placeholder="Fala comigo..." onkeydown="if(event.key==='Enter')sendMsg()">
+          <button class="csend" onclick="sendMsg()">ENVIAR</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CURSOS -->
+    <div class="panel" id="panel-cursos">
+      <div class="sec-h">CURSOS</div><div class="sec-s">// CONTEÚDO INCLUSO NA ASSINATURA</div>
+      <div class="course-grid">
+        <div class="cblock"><div class="ctag">MÓDULO 01 — FINANÇAS</div><div class="cname">CONTROLE FINANCEIRO NA PRÁTICA</div><div class="cdesc">Como sair do vermelho, criar reserva e construir patrimônio sem complicação.</div><div class="cmeta">6 aulas · 42 min</div></div>
+        <div class="cblock"><div class="ctag">MÓDULO 02 — MENTE</div><div class="cname">SAÚDE MENTAL MASCULINA</div><div class="cdesc">Ansiedade, pressão e foco. Como manter a cabeça no lugar quando tudo aperta.</div><div class="cmeta">5 aulas · 38 min</div></div>
+        <div class="cblock"><div class="ctag">MÓDULO 03 — FOCO</div><div class="cname">PRODUTIVIDADE REAL</div><div class="cdesc">Sistemas que funcionam para homem com agenda pesada.</div><div class="cmeta">7 aulas · 55 min</div></div>
+        <div class="cblock"><div class="ctag">MÓDULO 04 — DISCIPLINA</div><div class="cname">CONSTRUINDO HÁBITOS</div><div class="cdesc">Por que você falha toda vez. E como criar uma rotina que você realmente segue.</div><div class="cmeta">5 aulas · 40 min</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const now=new Date();
+const dayNames=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+document.getElementById('today-badge').textContent=dayNames[now.getDay()].toUpperCase()+', '+now.getDate()+'/'+(now.getMonth()+1);
+
+function toggleSidebar(){
+  const s=document.getElementById('sidebar');
+  const o=document.getElementById('overlay');
+  s.classList.toggle('open');
+  o.classList.toggle('show');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+let entries=[],taskFilter='all';
+let habits=[{id:1,name:'Acordar 6h',done:false,streak:3},{id:2,name:'Exercício',done:false,streak:7},{id:3,name:'Leitura 20min',done:true,streak:12},{id:4,name:'Sem redes manhã',done:false,streak:1}];
+let tasks=[{id:1,title:'Fechar contrato cliente X',pri:'high',done:false},{id:2,title:'Revisar planilha de gastos',pri:'med',done:false},{id:3,title:'Ligar pro banco',pri:'med',done:true},{id:4,title:'Estudar 1h',pri:'low',done:false}];
+
+function nav(p,el){
+  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
+  document.getElementById('panel-'+p).classList.add('active');
+  el.classList.add('active');
+  closeSidebar();
+  updateAll();
+}
+
+const fmt=v=>'R$'+Math.abs(v).toLocaleString('pt-BR',{minimumFractionDigits:2});
+
+function addEntry(){const d=document.getElementById('g-desc').value.trim();const v=parseFloat(document.getElementById('g-val').value);const t=document.getElementById('g-type').value;if(!d||isNaN(v)||v<=0)return;entries.push({id:Date.now(),desc:d,val:v,type:t,date:new Date().toLocaleDateString('pt-BR')});document.getElementById('g-desc').value='';document.getElementById('g-val').value='';renderEntries();updateDashboard();}
+function delEntry(id){entries=entries.filter(e=>e.id!==id);renderEntries();updateDashboard();}
+function renderEntries(){const rec=entries.filter(e=>e.type==='rec').reduce((s,e)=>s+e.val,0);const gas=entries.filter(e=>e.type==='gas').reduce((s,e)=>s+e.val,0);document.getElementById('g-rec').textContent=fmt(rec);document.getElementById('g-gas').textContent=fmt(gas);const sal=rec-gas;const se=document.getElementById('g-sal');se.textContent=fmt(sal);se.className='gc-v '+(sal>=0?'pos':'neg');document.getElementById('ecount').textContent=entries.length;const l=document.getElementById('elist');if(!entries.length){l.innerHTML='<div class="empty">Nenhum lançamento ainda</div>';return;}l.innerHTML=[...entries].reverse().map(e=>`<div class="eitem"><div class="edot ${e.type==='rec'?'pos':'neg'}"></div><div class="edesc">${e.desc}</div><div class="edate">${e.date}</div><div class="eval ${e.type==='rec'?'pos':'neg'}">${e.type==='rec'?'+':'-'}${fmt(e.val)}</div><button class="edel" onclick="delEntry(${e.id})">×</button></div>`).join('');}
+function addHabit(){const n=document.getElementById('new-habit').value.trim();if(!n)return;habits.push({id:Date.now(),name:n,done:false,streak:0});document.getElementById('new-habit').value='';renderHabits();updateDashboard();}
+function toggleHabit(id){const h=habits.find(x=>x.id===id);h.done=!h.done;if(h.done)h.streak++;else if(h.streak>0)h.streak--;renderHabits();updateDashboard();}
+function renderHabits(){const done=habits.filter(h=>h.done).length;const pct=habits.length?Math.round(done/habits.length*100):0;document.getElementById('disc-score-big').textContent=pct+'%';const wd=now.getDay();const wi=wd===0?6:wd-1;const we=document.getElementById('wd'+wi);if(we){we.textContent=pct+'%';we.style.color=pct>=80?'var(--green)':pct>=50?'var(--ac)':'var(--red)';}document.getElementById('habits-full-list').innerHTML=habits.map(h=>`<div class="hfrow" onclick="toggleHabit(${h.id})"><div class="hfc ${h.done?'done':''}"></div><div class="hfi"><div class="hfn ${h.done?'done':''}">${h.name}</div><div class="hfm">${h.streak} dias seguidos</div></div><div class="hfs">${h.streak}🔥</div></div>`).join('');const dh=document.getElementById('dash-habits');if(dh)dh.innerHTML=habits.slice(0,4).map(h=>`<div class="habit-row" onclick="toggleHabit(${h.id})"><div class="hcheck ${h.done?'done':''}"></div><div class="hname ${h.done?'done':''}">${h.name}</div><div class="streak">${h.streak}🔥</div></div>`).join('');document.getElementById('hab-count').textContent=done+'/'+habits.length;}
+function addTask(){const t=document.getElementById('new-task').value.trim();const p=document.getElementById('task-pri').value;if(!t)return;tasks.push({id:Date.now(),title:t,pri:p,done:false});document.getElementById('new-task').value='';renderTasks();updateDashboard();}
+function toggleTask(id){const t=tasks.find(x=>x.id===id);t.done=!t.done;renderTasks();updateDashboard();}
+function delTask(id){tasks=tasks.filter(t=>t.id!==id);renderTasks();updateDashboard();}
+function filterTasks(f,el){taskFilter=f;document.querySelectorAll('.ftab').forEach(x=>x.classList.remove('active'));el.classList.add('active');renderTasks();}
+const plabel={high:'🔴 ALTA',med:'🔵 MÉDIA',low:'🟢 BAIXA'};const pcls={high:'ph',med:'pm',low:'pl'};
+function renderTasks(){let show=taskFilter==='pending'?tasks.filter(t=>!t.done):taskFilter==='done'?tasks.filter(t=>t.done):tasks;const sorted=[...show].sort((a,b)=>{const o={high:0,med:1,low:2};if(a.done!==b.done)return a.done?1:-1;return o[a.pri]-o[b.pri];});document.getElementById('tasks-list').innerHTML=sorted.map(t=>`<div class="tfull"><div class="tfc ${t.done?'done':''}" onclick="toggleTask(${t.id})"></div><div class="tfb"><div class="tft ${t.done?'done':''}">${t.title}</div><div><span class="tpri ${pcls[t.pri]}">${plabel[t.pri]}</span></div></div><button class="tfdel" onclick="delTask(${t.id})">×</button></div>`).join('')||'<div class="empty">Nenhuma missão aqui</div>';const dt=document.getElementById('dash-tasks');if(dt)dt.innerHTML=tasks.filter(t=>!t.done&&t.pri==='high').slice(0,3).map(t=>`<div class="task-row"><div class="tcheck"></div><div><div class="tname">${t.title}</div><span class="tpri ph">${plabel[t.pri]}</span></div></div>`).join('')||'<div class="empty">Sem missões urgentes</div>';}
+function updateDashboard(){const rec=entries.filter(e=>e.type==='rec').reduce((s,e)=>s+e.val,0);const gas=entries.filter(e=>e.type==='gas').reduce((s,e)=>s+e.val,0);const sal=rec-gas;const se=document.getElementById('db-saldo');se.textContent=fmt(sal);se.className='card-value '+(sal>=0?'green':'red');const done=habits.filter(h=>h.done).length;document.getElementById('db-score').textContent=habits.length?Math.round(done/habits.length*100)+'%':'0%';document.getElementById('db-tasks').textContent=tasks.filter(t=>t.done).length+'/'+tasks.length;}
+function updateAll(){renderEntries();renderHabits();renderTasks();updateDashboard();}
+updateAll();
+
+let chatHistory = [];
+
+async function sendMsg(){
+  const inp=document.getElementById('chat-input');
+  const msg=inp.value.trim();
+  if(!msg)return;
+  inp.value='';
+  inp.disabled=true;
+  document.querySelector('.csend').disabled=true;
+
+  const msgs=document.getElementById('chat-msgs');
+  msgs.innerHTML+=`<div class="mwrap user"><div class="msender">VOCÊ</div><div class="bubble user">${msg}</div></div>`;
+
+  const t=document.createElement('div');
+  t.className='mwrap';
+  t.innerHTML='<div class="msender">NORTE IA</div><div class="bubble bot"><div class="typing"><span></span><span></span><span></span></div></div>';
+  msgs.appendChild(t);
+  msgs.scrollTop=msgs.scrollHeight;
+
+  chatHistory.push({role:'user', content: msg});
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ message: msg, history: chatHistory.slice(-10) })
+    });
+    const data = await res.json();
+    const reply = data.reply || 'Não consegui responder agora. Tenta de novo.';
+    chatHistory.push({role:'assistant', content: reply});
+    t.remove();
+    msgs.innerHTML+=`<div class="mwrap"><div class="msender">NORTE IA</div><div class="bubble bot">${reply}</div></div>`;
+  } catch(e) {
+    t.remove();
+    msgs.innerHTML+=`<div class="mwrap"><div class="msender">NORTE IA</div><div class="bubble bot">Erro de conexão. Verifica sua internet e tenta de novo.</div></div>`;
+  }
+
+  msgs.scrollTop=msgs.scrollHeight;
+  inp.disabled=false;
+  document.querySelector('.csend').disabled=false;
+  inp.focus();
+}
+
+function sendSug(el){document.getElementById('chat-input').value=el.textContent;sendMsg();}
+</script>
+</body>
+</html>
