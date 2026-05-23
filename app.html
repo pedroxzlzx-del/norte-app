@@ -34,7 +34,10 @@ body{background:var(--bg);color:var(--tx);font-family:var(--body);display:flex;f
 .user-area{display:flex;align-items:center;gap:10px;}
 .avatar{width:30px;height:30px;border-radius:50%;background:var(--ac);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#fff;flex-shrink:0;}
 .user-name{font-size:12px;color:var(--mt2);white-space:nowrap;}
-.xp-area{display:flex;flex-direction:column;align-items:flex-end;gap:2px;min-width:120px;}
+.xp-area{display:flex;flex-direction:column;align-items:flex-end;gap:2px;min-width:120px;cursor:pointer;padding:4px 6px;border-radius:4px;transition:background 0.2s;}
+.xp-area:hover{background:rgba(255,215,0,0.06);}
+.xp-area:hover .xp-cargo{color:#ffe44d;}
+.xp-area:hover .xp-bar-fill{filter:brightness(1.2);}
 .xp-cargo{font-family:var(--mono);font-size:9px;color:var(--gold);letter-spacing:2px;}
 .xp-bar-wrap{width:120px;height:4px;background:var(--bd);border-radius:2px;overflow:hidden;}
 .xp-bar-fill{height:100%;background:linear-gradient(90deg,var(--ac),var(--gold));border-radius:2px;transition:width 0.5s ease;}
@@ -319,7 +322,7 @@ body{background:var(--bg);color:var(--tx);font-family:var(--body);display:flex;f
     <div class="day-badge" id="today-badge"></div>
   </div>
   <div class="user-area">
-    <div class="xp-area">
+    <div class="xp-area" onclick="nav('loja',document.querySelector('.loja-item'))" style="cursor:pointer;" title="Ver progresso de XP">
       <div class="xp-cargo" id="top-cargo">PERDIDO</div>
       <div class="xp-bar-wrap"><div class="xp-bar-fill" id="top-xp-bar" style="width:0%"></div></div>
       <div class="xp-label" id="top-xp-label">0 XP</div>
