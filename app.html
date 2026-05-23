@@ -435,6 +435,15 @@ function updateDashboard(){const rec=entries.filter(e=>e.type==='rec').reduce((s
 function updateAll(){renderEntries();renderHabits();renderTasks();updateDashboard();}
 updateAll();
 
+async function typeText(el, text, speed=18){
+  el.textContent='';
+  for(let i=0;i<text.length;i++){
+    el.textContent+=text[i];
+    document.getElementById('chat-msgs').scrollTop=99999;
+    await new Promise(r=>setTimeout(r,speed));
+  }
+}
+
 async function sendMsg(){
   const inp=document.getElementById('chat-input');
   const msg=inp.value.trim();
@@ -446,70 +455,28 @@ async function sendMsg(){
   const msgs=document.getElementById('chat-msgs');
   msgs.innerHTML+=`<div class="mwrap user"><div class="msender">VOCÊ</div><div class="bubble user">${msg}</div></div>`;
 
-  // Cria bolha de resposta vazia
   const wrap=document.createElement('div');
   wrap.className='mwrap';
-  wrap.innerHTML='<div class="msender">NORTE IA</div><div class="bubble bot" id="streaming-bubble"><div class="typing"><span></span><span></span><span></span></div></div>';
+  wrap.innerHTML='<div class="msender">NORTE IA</div><div class="bubble bot" id="typing-bubble"><div class="typing"><span></span><span></span><span></span></div></div>';
   msgs.appendChild(wrap);
-  msgs.scrollTop=msgs.scrollHeight;
+  msgs.scrollTop=99999;
 
   try {
     const res = await fetch('/api/chat', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ message: msg })
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({message:msg})
     });
-
-    const contentType = res.headers.get('content-type') || '';
-
-    // STREAMING
-    if (contentType.includes('text/event-stream')) {
-      const bubble = document.getElementById('streaming-bubble');
-      bubble.innerHTML = '';
-      let fullText = '';
-
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = '';
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split('\n');
-        buffer = lines.pop();
-
-        for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            const data = line.slice(6).trim();
-            if (data === '[DONE]') break;
-            try {
-              const parsed = JSON.parse(data);
-              if (parsed.token) {
-                fullText += parsed.token;
-                bubble.textContent = fullText;
-                msgs.scrollTop = msgs.scrollHeight;
-              }
-            } catch {}
-          }
-        }
-      }
-
-      if (!fullText) bubble.textContent = 'Não consegui responder agora. Tenta de novo.';
-
-    } else {
-      // Fallback JSON
-      const data = await res.json();
-      const bubble = document.getElementById('streaming-bubble');
-      bubble.textContent = data.reply || 'Não consegui responder agora. Tenta de novo.';
-    }
-
-  } catch(e) {
-    const bubble = document.getElementById('streaming-bubble');
-    if (bubble) bubble.textContent = 'Erro de conexão. Verifica sua internet e tenta de novo.';
+    const data = await res.json();
+    const reply = data.reply || 'Não consegui responder agora. Tenta de novo.';
+    const bubble = document.getElementById('typing-bubble');
+    if(bubble){ await typeText(bubble, reply, 16); }
+  } catch(e){
+    const bubble=document.getElementById('typing-bubble');
+    if(bubble) bubble.textContent='Erro de conexão. Verifica sua internet e tenta de novo.';
   }
 
-  msgs.scrollTop=msgs.scrollHeight;
+  msgs.scrollTop=99999;
   inp.disabled=false;
   document.querySelector('.csend').disabled=false;
   inp.focus();
